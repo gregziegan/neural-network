@@ -1,5 +1,7 @@
 package ANN.Utils;
 
+import ANN.Neuron;
+
 public class Utils {
 
     public static double evaluateSigmoid(final double exponent) {
@@ -17,4 +19,6 @@ public class Utils {
         }
         return sum;
     }
+
+
 }

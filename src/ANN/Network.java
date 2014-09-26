@@ -7,9 +7,14 @@ public class Network {
     private Neuron[] neurons;
     private Connection[] connections;
 
-    public Network(Neuron[] neurons, Connection[] connections) {
+    private float weightDecay;
+    private int numberOfHiddenNeurons;
+
+    public Network(Neuron[] neurons, Connection[] connections, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
         this.connections = connections;
+        this.weightDecay = weightDecay;
+        this.numberOfHiddenNeurons = numberOfHiddenNeurons;
     }
 
     public Neuron[] getNeurons() {

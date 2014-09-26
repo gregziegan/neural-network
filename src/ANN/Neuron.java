@@ -2,9 +2,7 @@ package ANN;
 
 import ANN.Utils.Utils;
 
-enum Layer {
-    INPUT, HIDDEN, OUTPUT
-}
+
 
 public class Neuron {
 
@@ -35,7 +33,7 @@ public class Neuron {
         double[] weights = network.getWeights(this);
         double u = Utils.getDotProduct(weights, inputs) - activationThreshold;
         double activation_score = Utils.evaluateSigmoid(u);
-        if (activation_score >= 0) {
+        if (activation_score >= 0.5) {
             return 1;
         } else {
             return 0;
