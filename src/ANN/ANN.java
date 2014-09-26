@@ -24,11 +24,11 @@ public class ANN {
         rnd.setSeed(12345);
         String filename = "voting";
         DataSet metaInfo = data.DataFileProcessor.readInMetaInfo(filename);
-        Vector<Attribute> attr = new Vector<Attribute>();					// vector of type attribute to be used for classification issue
-        int attNum = metaInfo.numAttributes();								// this variable holds the total number of attributes
-        for(int i = 0; i< attNum;i++)										// loop over meta information to get the attributes' properties and add it to the attr vector
-            attr.add(metaInfo.attribute(i));
-        DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);			// call readInData function by passing the full path of the file and the meta information. store the returned data into dataSet vector
+        Vector<Attribute> attributes = new Vector<Attribute>();
+        int attNum = metaInfo.numAttributes();
+        for(int i = 0; i< attNum;i++)
+            attributes.add(metaInfo.attribute(i));
+        DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
         Neuron[] neurons = NeuronFactory.createNeurons(dataSet.toArray(dataSet));
         Connection[] connections = ConnectionFactory.createConnections(dataSet);
