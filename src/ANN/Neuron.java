@@ -2,12 +2,20 @@ package ANN;
 
 import ANN.Utils.Utils;
 
-public class Perceptron {
+enum Layer {
+    INPUT, HIDDEN, OUTPUT
+}
+
+public class Neuron {
 
     private double activationThreshold;
+    private Layer layer;
+    private Network network;
 
-    public Perceptron(double activationThreshold) {
+    public Neuron(double activationThreshold, Layer layer, Network network) {
         this.activationThreshold = activationThreshold;
+        this.layer = layer;
+        this.network = network;
     }
 
     public double getActivationThreshold() {
@@ -18,8 +26,13 @@ public class Perceptron {
         this.activationThreshold = activationThreshold;
     }
 
-    public int getOutput(double[] weights, double[] inputs) {
+    public Layer getLayer() {
+        return layer;
+    }
 
+    public int getOutput(double[] inputs) {
+
+        double[] weights = network.getWeights(this);
         double u = Utils.getDotProduct(weights, inputs) - activationThreshold;
         double activation_score = Utils.evaluateSigmoid(u);
         if (activation_score >= 0) {
