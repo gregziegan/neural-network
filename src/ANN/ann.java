@@ -1,16 +1,14 @@
 package ANN;
 
-import ANN.Utils.ConnectionFactory;
-import ANN.Utils.NeuronFactory;
+import ANN.Utils.NetworkFactory;
 import Parsing.data.Attribute;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
 
-public class ANN {
+public class ann {
 
     public static void main(String[] args) {
 
@@ -23,7 +21,7 @@ public class ANN {
         float weightDecay = Float.parseFloat(args[2]);
         int numberOfTrainingIterations = Integer.parseInt(args[3]);
 
-        Random random= new Random();
+        Random random = new Random();
         random.setSeed(12345);
         DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
         ArrayList<Attribute> attributes = new ArrayList<Attribute>(metaInfo.numAttributes());
@@ -32,9 +30,7 @@ public class ANN {
             attributes.add(metaInfo.attribute(i));
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
-        Neuron[] neurons = NeuronFactory.createNeurons(dataSet);
-        Connection[] connections = ConnectionFactory.createConnections(dataSet);
-        Network network = new Network(neurons, connections, weightDecay, numberOfHiddenNeurons);
+        Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
         train(network, numberOfTrainingIterations);
     }
 

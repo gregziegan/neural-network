@@ -1,6 +1,9 @@
 package ANN.Utils;
 
 import ANN.Neuron;
+import Parsing.data.Attribute;
+import Parsing.data.DataSet;
+import Parsing.data.Instance;
 
 public class Utils {
 
@@ -20,5 +23,12 @@ public class Utils {
         return sum;
     }
 
+    public static double[] getInstanceValues(Instance instance) {
+        double[] values = new double[instance.length()];
+        for (int i = 0; i < instance.length(); i++) {
+            values[i] = instance.value(i);
+        }
+        return values;
+    }
 
 }

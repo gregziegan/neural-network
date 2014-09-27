@@ -4,7 +4,7 @@ public class Neuron {
 
     private double activationThreshold;
     private Layer layer;
-    private double inputUnit;
+    private double inputValue;
 
     public Neuron(double activationThreshold, Layer layer) {
         this.activationThreshold = activationThreshold;
@@ -13,7 +13,7 @@ public class Neuron {
 
     public Neuron(Layer layer, double inputUnit) {
         assert layer == Layer.INPUT;
-        this.inputUnit = inputUnit;
+        this.inputValue = inputUnit;
         this.activationThreshold = 0;
     }
 
@@ -27,14 +27,14 @@ public class Neuron {
         this.activationThreshold = activationThreshold;
     }
 
-    public void setInputUnit(double inputUnit) {
+    public void setInputValue(double inputValue) {
         assert layer == Layer.INPUT;
-        this.inputUnit = inputUnit;
+        this.inputValue = inputValue;
     }
 
-    public double getInputUnit() {
+    public double getInputValue() {
         assert layer == Layer.INPUT;
-        return inputUnit;
+        return inputValue;
     }
 
     public Layer getLayer() {

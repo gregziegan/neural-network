@@ -45,7 +45,7 @@ public class DataFileProcessor {
 	 * @return
 	 */
 	public static DataSet readInMetaInfo(String dataSpecFileName) {
-		String dataSpecFilePath = Config.DATA_PATH + dataSpecFileName + DATA_SPEC_FILE_EXTENSION;
+		String dataSpecFilePath = dataSpecFileName + DATA_SPEC_FILE_EXTENSION;
 		HashMap<String, Integer> attrNameMap = new HashMap<String, Integer>();
 		Vector<Attribute> attributes = new Vector<Attribute>();
 		int classIndex = -1;
@@ -119,7 +119,7 @@ public class DataFileProcessor {
 	 * @return
 	 */
 	public static DataSet readInData(String dataFileName, DataSet dataSet) {
-		String dataFilePath = Config.DATA_PATH + dataFileName + DataFileProcessor.DATA_FILE_EXTENSION;
+		String dataFilePath = dataFileName + DataFileProcessor.DATA_FILE_EXTENSION;
 		BufferedReader inputBufferedReader = null;
 		Vector<Instance> instances = new Vector<Instance>();
 		try {

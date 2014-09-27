@@ -8,31 +8,24 @@ public class Network {
 
     private Neuron[] neurons;
     private Connection[] connections;
-
     private float weightDecay;
-    private int numberOfHiddenNeurons;
 
-    public Network(Neuron[] neurons, Connection[] connections, float weightDecay, int numberOfHiddenNeurons) {
+    public Network(Neuron[] neurons, Connection[] connections, float weightDecay) {
         this.neurons = neurons;
         this.connections = connections;
         this.weightDecay = weightDecay;
-        this.numberOfHiddenNeurons = numberOfHiddenNeurons;
     }
 
     public Neuron[] getNeurons() {
         return neurons;
     }
 
-    public void setNeurons(Neuron[] neurons) {
-        this.neurons = neurons;
-    }
-
     public Connection[] getConnections() {
         return connections;
     }
 
-    public void setConnections(Connection[] connections) {
-        this.connections = connections;
+    public float getWeightDecay() {
+        return weightDecay;
     }
 
     public int getOutput(Neuron neuron) {

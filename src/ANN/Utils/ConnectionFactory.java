@@ -1,25 +1,40 @@
 package ANN.Utils;
 
 import ANN.Connection;
-import ANN.Network;
 import ANN.Neuron;
 
-public class ConnectionFactory {
-    public static Connection[] createConnections(final String[] data, final Network network) {
-        Connection[] connections = new Connection[data.length];
+import java.util.Arrays;
+import java.util.Random;
 
-        for (int i = 0; i < connections.length; i++) {
-            connections[i] = createConnection(data[i]);
+public class ConnectionFactory {
+    public static Connection[] createInitialConnections(final Neuron[] neurons, int numberOfInputNeurons, int numberOfHiddenNeurons) {
+        int totalConnections = numberOfInputNeurons * numberOfHiddenNeurons + numberOfHiddenNeurons;
+        Connection[] connections = new Connection[totalConnections];
+        Random random = new Random(12345);
+
+        double[] initialWeightChoices = new double[]{-0.1, 0.1};
+        double randomWeight;
+        int k = 0;
+        for (int i = 0; i < numberOfInputNeurons; i++) {
+            for (int j = 0; j < numberOfHiddenNeurons; j++) {
+                randomWeight = initialWeightChoices[random.nextInt(2)];
+                connections[i+j+k] = new Connection(neurons[i], neurons[numberOfInputNeurons+j], randomWeight);
+            }
+            k += numberOfHiddenNeurons;
         }
 
         return connections;
     }
 
-    public static Connection createConnection(final String on_info) {
-        int weight = 1;
-        Neuron fromNeuron = connection_info[0];
-        Neuron toNeuron = connection_info[1];
-        Connection connection = new Connection(fromNeuron, toNeuron, weight); // TODO parse input data to create a connection
-        return connection;
+    public static Connection[] createModifiedConnections(final Connection[] connections, final double[] weights) {
+        int numberOfConnections = connections.length;
+        Connection[] modifiedConnections = Arrays.copyOf(connections, numberOfConnections, Connection[].class);
+
+        for (int i = 0; i < numberOfConnections; i++) {
+            modifiedConnections[i].setWeight(weights[i]);
+        }
+
+        return modifiedConnections;
     }
+
 }
