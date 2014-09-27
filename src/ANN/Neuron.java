@@ -1,42 +1,44 @@
 package ANN;
 
-import ANN.Utils.Utils;
-
-
-
 public class Neuron {
 
     private double activationThreshold;
     private Layer layer;
-    private Network network;
+    private double inputUnit;
 
-    public Neuron(double activationThreshold, Layer layer, Network network) {
+    public Neuron(double activationThreshold, Layer layer) {
         this.activationThreshold = activationThreshold;
         this.layer = layer;
-        this.network = network;
+    }
+
+    public Neuron(Layer layer, double inputUnit) {
+        assert layer == Layer.INPUT;
+        this.inputUnit = inputUnit;
+        this.activationThreshold = 0;
     }
 
     public double getActivationThreshold() {
+        assert layer != Layer.INPUT;
         return activationThreshold;
     }
 
     public void setActivationThreshold(double activationThreshold) {
+        assert layer != Layer.INPUT;
         this.activationThreshold = activationThreshold;
+    }
+
+    public void setInputUnit(double inputUnit) {
+        assert layer == Layer.INPUT;
+        this.inputUnit = inputUnit;
+    }
+
+    public double getInputUnit() {
+        assert layer == Layer.INPUT;
+        return inputUnit;
     }
 
     public Layer getLayer() {
         return layer;
     }
 
-    public int getOutput(double[] inputs) {
-
-        double[] weights = network.getWeights(this);
-        double u = Utils.getDotProduct(weights, inputs) - activationThreshold;
-        double activation_score = Utils.evaluateSigmoid(u);
-        if (activation_score >= 0.5) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
 }

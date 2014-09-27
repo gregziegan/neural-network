@@ -1,5 +1,7 @@
 package ANN;
 
+import ANN.Utils.Utils;
+
 import java.util.ArrayList;
 
 public class Network {
@@ -33,22 +35,35 @@ public class Network {
         this.connections = connections;
     }
 
-    public double[] getWeights(final Neuron neuron) {
+    public int getOutput(Neuron neuron) {
 
-        ArrayList<Double> weights_list = new ArrayList<Double>();
+        Connection[] connections = getInputs(neuron);
+        double[] weights = new double[connections.length];
+        double[] inputs = new double[connections.length];
+
+        for (int i = 0; i < connections.length; i++) {
+            weights[i] = connections[i].getWeight();
+            inputs[i] = getOutput(connections[i].getFrom());
+        }
+
+        double u = Utils.getDotProduct(weights, inputs) - neuron.getActivationThreshold();
+        double activation_score = Utils.evaluateSigmoid(u);
+        if (activation_score >= 0.5) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public Connection[] getInputs(Neuron neuron) {
+        ArrayList<Connection> inputs_list = new ArrayList<Connection>();
 
         for (Connection connection : getConnections()) {
             if (connection.getTo().equals(neuron)) {
-                weights_list.add(connection.getWeight());
+                inputs_list.add(connection);
             }
         }
 
-        double[] weights = new double[weights_list.size()];
-
-        for (int i = 0; i < weights_list.size(); i++) {
-            weights[i] = weights_list.get(i);
-        }
-
-        return weights;
+        return inputs_list.toArray(new Connection[inputs_list.size()]);
     }
 }

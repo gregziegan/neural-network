@@ -3,23 +3,23 @@ package ANN.Utils;
 import ANN.Layer;
 import ANN.Network;
 import ANN.Neuron;
-import DataParsing.DataSet;
+import Parsing.data.DataSet;
 
 public class NeuronFactory {
-    public static Neuron[] createNeurons(final double[][] data, final Network network) {
-        Neuron[] neurons = new Neuron[data.size()];
+    public static Neuron[] createNeurons(final double[][] data) {
+        Neuron[] neurons = new Neuron[data.length];
 
         for (int i = 0; i < data.length; i++) {
-            neurons[i] = createNeuron(data[i][0], network);
+            neurons[i] = createNeuron(data[i][0]);
         }
 
         return neurons;
     }
 
-    public static Neuron createNeuron(final double neuronInfo, final Network network) {
+    public static Neuron createNeuron(final double neuronInfo) {
         double activation_threshold = neuronInfo;
         Layer neuronLayer = Layer.HIDDEN;
-        Neuron neuron = new Neuron(activation_threshold, neuronLayer, network);  // TODO need to parse input data to create neuron
+        Neuron neuron = new Neuron(activation_threshold, neuronLayer);  // TODO need to parse input data to create neuron
         return neuron;
     }
 }

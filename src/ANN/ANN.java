@@ -2,7 +2,9 @@ package ANN;
 
 import ANN.Utils.ConnectionFactory;
 import ANN.Utils.NeuronFactory;
-import DataParsing.*;
+import Parsing.data.Attribute;
+import Parsing.data.DataFileProcessor;
+import Parsing.data.DataSet;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,31 +14,33 @@ public class ANN {
 
     public static void main(String[] args) {
 
-        if (args.length != 3) {
-            throw new IllegalArgumentException("Script takes 3 options.");
-        }
+        if (args.length != 4)
+            throw new IllegalArgumentException("Script takes 4 arguments.");
 
-        int numberOfHiddenNeurons = Integer.parseInt(args[0]);
-        float weightDecay = Float.parseFloat(args[1]);
-        int numberOfTrainingIterations = Integer.parseInt(args[2]);
 
-        Random rnd = new Random();
-        rnd.setSeed(12345);
-        String filename = "voting";
-        DataSet metaInfo = data.DataFileProcessor.readInMetaInfo(filename);
-        Vector<Attribute> attributes = new Vector<Attribute>();
-        int attNum = metaInfo.numAttributes();
-        for(int i = 0; i< attNum;i++)
+        String filename = args[0];
+        int numberOfHiddenNeurons = Integer.parseInt(args[1]);
+        float weightDecay = Float.parseFloat(args[2]);
+        int numberOfTrainingIterations = Integer.parseInt(args[3]);
+
+        Random random= new Random();
+        random.setSeed(12345);
+        DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
+        ArrayList<Attribute> attributes = new ArrayList<Attribute>(metaInfo.numAttributes());
+        int attributeNumbers = metaInfo.numAttributes();
+        for(int i = 0; i < attributeNumbers;i++)
             attributes.add(metaInfo.attribute(i));
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
-        Neuron[] neurons = NeuronFactory.createNeurons(dataSet.toArray(dataSet));
+        Neuron[] neurons = NeuronFactory.createNeurons(dataSet);
         Connection[] connections = ConnectionFactory.createConnections(dataSet);
         Network network = new Network(neurons, connections, weightDecay, numberOfHiddenNeurons);
         train(network, numberOfTrainingIterations);
     }
 
     public static void train(Network network, int numberOfTrainingIterations) {
-
+        for (int i = 0; i < numberOfTrainingIterations; i++) {
+            // TODO implement training method
+        }
     }
 }
