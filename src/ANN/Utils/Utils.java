@@ -1,8 +1,5 @@
 package ANN.Utils;
 
-import ANN.Neuron;
-import Parsing.data.Attribute;
-import Parsing.data.DataSet;
 import Parsing.data.Instance;
 
 public class Utils {

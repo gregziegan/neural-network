@@ -1,62 +1,49 @@
 package ANN;
 
-import ANN.Utils.Utils;
-
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Network {
 
     private Neuron[] neurons;
-    private Connection[] connections;
+    private double[][] weights;
     private float weightDecay;
+    private int numberOfHiddenNeurons;
 
-    public Network(Neuron[] neurons, Connection[] connections, float weightDecay) {
+    public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
-        this.connections = connections;
+        this.weights = weights;
         this.weightDecay = weightDecay;
+        this.numberOfHiddenNeurons = numberOfHiddenNeurons;
     }
 
     public Neuron[] getNeurons() {
         return neurons;
     }
 
-    public Connection[] getConnections() {
-        return connections;
+    public int getNumberOfHiddenNeurons() {
+        return numberOfHiddenNeurons;
+    }
+
+    public double[][] getWeights() {
+        return weights;
+    }
+
+    public Neuron[] getInputNeurons() {
+        int numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1;
+        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
+    }
+
+    public Neuron[] getHiddenNeurons() {
+        int hiddenNeuronStartIndex = this.neurons.length - 1 - numberOfHiddenNeurons;
+        return Arrays.copyOfRange(this.neurons, hiddenNeuronStartIndex, this.neurons.length - 1, Neuron[].class);
+    }
+
+    public Neuron getOutputNeuron() {
+        return this.neurons[neurons.length-1];
     }
 
     public float getWeightDecay() {
         return weightDecay;
     }
 
-    public int getOutput(Neuron neuron) {
-
-        Connection[] connections = getInputs(neuron);
-        double[] weights = new double[connections.length];
-        double[] inputs = new double[connections.length];
-
-        for (int i = 0; i < connections.length; i++) {
-            weights[i] = connections[i].getWeight();
-            inputs[i] = getOutput(connections[i].getFrom());
-        }
-
-        double u = Utils.getDotProduct(weights, inputs) - neuron.getActivationThreshold();
-        double activation_score = Utils.evaluateSigmoid(u);
-        if (activation_score >= 0.5) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public Connection[] getInputs(Neuron neuron) {
-        ArrayList<Connection> inputs_list = new ArrayList<Connection>();
-
-        for (Connection connection : getConnections()) {
-            if (connection.getTo().equals(neuron)) {
-                inputs_list.add(connection);
-            }
-        }
-
-        return inputs_list.toArray(new Connection[inputs_list.size()]);
-    }
 }

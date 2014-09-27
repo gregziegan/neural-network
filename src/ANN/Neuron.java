@@ -1,5 +1,7 @@
 package ANN;
 
+import ANN.Utils.Utils;
+
 public class Neuron {
 
     private double activationThreshold;
@@ -40,6 +42,16 @@ public class Neuron {
 
     public Layer getLayer() {
         return layer;
+    }
+
+    public double getOutput(double[] weights, double[] inputsValues) {
+        double u = Utils.getDotProduct(weights, inputsValues) - activationThreshold;
+        double activation_score = Utils.evaluateSigmoid(u);
+        if (activation_score >= 0.5) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public String toString() {
