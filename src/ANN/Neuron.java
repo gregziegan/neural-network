@@ -13,6 +13,7 @@ public class Neuron {
 
     public Neuron(Layer layer, double inputUnit) {
         assert layer == Layer.INPUT;
+        this.layer = layer;
         this.inputValue = inputUnit;
         this.activationThreshold = 0;
     }
@@ -41,4 +42,8 @@ public class Neuron {
         return layer;
     }
 
+    public String toString() {
+        String hashCode = Integer.toHexString(System.identityHashCode(this));
+        return "<Neuron: Layer: " + this.layer + " Addr: " + hashCode.substring(0, 5) + ">";
+    }
 }

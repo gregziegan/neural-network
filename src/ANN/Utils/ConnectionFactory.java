@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class ConnectionFactory {
-    public static Connection[] createInitialConnections(final Neuron[] neurons, int numberOfInputNeurons, int numberOfHiddenNeurons) {
+    public static Connection[] createInitialConnections(final Neuron[] neurons, final int numberOfInputNeurons, final int numberOfHiddenNeurons) {
         int totalConnections = numberOfInputNeurons * numberOfHiddenNeurons + numberOfHiddenNeurons;
         Connection[] connections = new Connection[totalConnections];
         Random random = new Random(12345);
@@ -20,7 +20,12 @@ public class ConnectionFactory {
                 randomWeight = initialWeightChoices[random.nextInt(2)];
                 connections[i+j+k] = new Connection(neurons[i], neurons[numberOfInputNeurons+j], randomWeight);
             }
-            k += numberOfHiddenNeurons;
+            k += numberOfHiddenNeurons - 1;
+        }
+
+        for (int i = 0; i < numberOfHiddenNeurons; i++) {
+            randomWeight = initialWeightChoices[random.nextInt(2)];
+            connections[i] = new Connection(neurons[numberOfInputNeurons+i], neurons[neurons.length-1], randomWeight);
         }
 
         return connections;

@@ -11,7 +11,7 @@ public class NeuronFactory {
         Neuron[] neurons = new Neuron[totalNeurons];
 
         for (int i = 0; i < totalNeurons; i++) {
-            if (i <= numberOfInputNeurons) {
+            if (i < numberOfInputNeurons) {
                 neurons[i] = new Neuron(Layer.INPUT, inputValues[i + 1]);  // offset to avoid index attribute
             } else if (i < totalNeurons - 1) {
                 neurons[i] = new Neuron(0, Layer.HIDDEN);

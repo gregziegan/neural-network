@@ -28,4 +28,8 @@ public class Connection {
         this.weight = weight;
     }
 
+    public String toString() {
+        return "<Connection: from: " + this.from + " to: " + this.to + " weight: " + this.weight + ">";
+    }
+
 }
