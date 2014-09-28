@@ -1,5 +1,6 @@
 package ANN;
 
+import ANN.Utils.Utils;
 import Parsing.data.Instance;
 
 import java.util.Arrays;
@@ -50,7 +51,25 @@ public class Network {
         return weightDecay;
     }
 
-    public void backPropagate() {
+    public void backPropagate(int classLabel) {
+        double[][] weightChanges = weights.clone();
+        Neuron outputNeuron = getOutputNeuron();
+
+        for (int neuron = numberOfInputNeurons; neuron < numberOfHiddenNeurons; neuron++) {
+            Neuron hiddenNeuron = neurons[neuron];
+            double weightChange = Utils.getWeightChangeValueOutputLayer(hiddenNeuron.getOutputValue(), outputNeuron.getOutputValue(), classLabel);
+            weightChanges[neuron][0] = weightChange;
+        }
+
+        for (int hiddenNeuron = numberOfInputNeurons; hiddenNeuron < numberOfHiddenNeurons; hiddenNeuron++) {
+            Neuron hiddenN = neurons[hiddenNeuron];
+            for (int neuron = 0; neuron < numberOfInputNeurons; neuron++) {
+                Neuron inputNeuron = neurons[neuron];
+                double downstream = (weightChanges[hiddenNeuron][0] * this.weights[hiddenNeuron][0] / hiddenN.getOutputValue() ); // TODO figure out what dividing by is
+                double weightChange = Utils.getWeightChangeValueHiddenLayer(inputNeuron.getOutputValue(), hiddenN.getOutputValue(), downstream );
+                weightChanges[neuron][hiddenNeuron] = weightChange;
+            }
+        }
 
     }
 
