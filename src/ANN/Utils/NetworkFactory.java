@@ -6,7 +6,6 @@ import Parsing.data.DataSet;
 
 import java.util.Random;
 
-
 public class NetworkFactory {
 
     public static Network createInitialNetwork(final DataSet trainingSet, final float weightDecay, final int numberOfHiddenNeurons) {
@@ -19,9 +18,9 @@ public class NetworkFactory {
         return new Network(neurons, initialWeights, weightDecay, numberOfHiddenNeurons);
     }
 
-    public static Network getModifiedNetwork(Network network, double[] biases, double[] weights) {
+    public static Network getModifiedNetwork(Network network, double[] biases, double[][] weights) {
         Neuron[] neurons = NeuronFactory.createModifiedNeurons(network.getNeurons(), biases);
-        return new Network(neurons, network.getWeights(), network.getWeightDecay(), network.getNumberOfHiddenNeurons());
+        return new Network(neurons, weights, network.getWeightDecay(), network.getNumberOfHiddenNeurons());
     }
 
     public static double[][] getInitialWeights(final Neuron[] neurons, final int numberOfInputNeurons, final int numberOfHiddenNeurons) {

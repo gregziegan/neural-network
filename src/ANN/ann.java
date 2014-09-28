@@ -36,12 +36,9 @@ public class ann {
         DataSet[] trainingSets = Utils.getTrainingSets(dataSet, 5);
 
         Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
-        train(network, numberOfTrainingIterations);
+
+
+        Trainer.getTrainedNetwork(network, numberOfTrainingIterations);
     }
 
-    public static void train(Network network, int numberOfTrainingIterations) {
-        for (int i = 0; i < numberOfTrainingIterations; i++) {
-            // TODO implement training method
-        }
-    }
 }
