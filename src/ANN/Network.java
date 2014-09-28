@@ -46,4 +46,8 @@ public class Network {
         return weightDecay;
     }
 
+    public void backPropogate() {
+        
+
+    }
 }

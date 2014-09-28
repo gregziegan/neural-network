@@ -11,6 +11,23 @@ public class Utils {
         return 1 / (1 + Math.exp(-exponent) );
     }
 
+    public static double getLoss(final double output, final double expected) {
+        return (output - expected);
+
+    }
+
+    public static double evaluateSigmoidDerivative(final double exponent) {
+        return evaluateSigmoid(exponent) * (1 - evaluateSigmoid(exponent));
+    }
+
+    public static double getWeightChangeValueOutputLayer(final double input, final double output, final double expected) {
+        return getLoss(output, expected) * input * output * (1 - output);
+    }
+
+    public static double getWeightChangeValueHiddenLayer(final double input, final double output, final double downstreamValue) {
+        return output * (1 - output) * input * downstreamValue;
+    }
+
     public static double getDotProduct(double[] a, double[] b){
         if(a.length != b.length){
             throw new IllegalArgumentException("The dimensions have to be equal!");
