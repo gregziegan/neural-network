@@ -7,6 +7,7 @@ public class Neuron {
     private double activationThreshold;
     private Layer layer;
     private double inputValue;
+    private double outputValue;
 
     public Neuron(double activationThreshold, Layer layer) {
         this.activationThreshold = activationThreshold;
@@ -40,18 +41,19 @@ public class Neuron {
         return inputValue;
     }
 
+    public double getOutputValue() {
+        return outputValue;
+    }
+
     public Layer getLayer() {
         return layer;
     }
 
-    public double getOutput(double[] weights, double[] inputsValues) {
-        double u = Utils.getDotProduct(weights, inputsValues) - activationThreshold;
-        double activation_score = Utils.evaluateSigmoid(u);
-        if (activation_score >= 0.5) {
-            return 1;
-        } else {
-            return 0;
-        }
+    public void updateOutput(double[] weights, double[] inputValues) {
+        if (layer == Layer.INPUT)
+            this.outputValue = inputValue;
+        double u = Utils.getDotProduct(weights, inputValues) - activationThreshold;
+        this.outputValue = Utils.evaluateSigmoid(u);
     }
 
     public String toString() {
