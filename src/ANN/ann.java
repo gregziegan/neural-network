@@ -1,10 +1,12 @@
 package ANN;
 
 import ANN.Utils.NetworkFactory;
+import ANN.Utils.Utils;
 import Parsing.data.Attribute;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
 
+import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,6 +31,9 @@ public class ann {
         for(int i = 0; i < attributeNumbers;i++)
             attributes.add(metaInfo.attribute(i));
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
+
+        DataSet shuffledDataSet = Utils.getShuffledDataSet(dataSet);
+        DataSet[] trainingSets = Utils.getTrainingSets(dataSet, 5);
 
         Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
         train(network, numberOfTrainingIterations);
