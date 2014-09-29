@@ -8,6 +8,14 @@ import java.util.Random;
 
 public class NetworkFactory {
 
+    public static Network[] getSeveralNetworkCopies(final int numNetworks, final DataSet trainingSet, final float weightDecay, final int numberOfHiddenNeurons) {
+        Network[] networks = new Network[numNetworks];
+        for (int i = 0; i < numNetworks; i++) {
+            networks[i] = createInitialNetwork(trainingSet, weightDecay, numberOfHiddenNeurons);
+        }
+        return networks;
+    }
+
     public static Network createInitialNetwork(final DataSet trainingSet, final float weightDecay, final int numberOfHiddenNeurons) {
         int numberOfInputNeurons = trainingSet.numAttributes() - 2;  // first attribute is the index, last attribute is the class label
 
