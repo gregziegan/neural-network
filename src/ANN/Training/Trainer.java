@@ -13,13 +13,21 @@ public class Trainer implements Runnable {
     private int numberOfTrainingIterations;
     private PerformanceMeasure performanceMeasure;
     private List<PerformanceMeasure> performanceMeasures;
+    private List<ROCData> rocDataList;
 
-    public Trainer(List<PerformanceMeasure> performanceMeasures, Network network, DataSet trainingSet, DataSet validationSet, int numberOfTrainingIterations) {
+    private double[] trueClasses;
+    private double[] confidences;
+
+    public Trainer(List<PerformanceMeasure> performanceMeasures, List<ROCData> rocDataList, Network network, DataSet trainingSet, DataSet validationSet, int numberOfTrainingIterations) {
         this.performanceMeasures = performanceMeasures;
+        this.rocDataList = rocDataList;
         this.network = network;
         this.trainingSet = trainingSet;
         this.validationSet = validationSet;
         this.numberOfTrainingIterations = numberOfTrainingIterations;
+
+        trueClasses = new double[validationSet.size()];
+        confidences = new double[validationSet.size()];
     }
 
     private void calculatePerformanceMeasure() {
@@ -28,21 +36,22 @@ public class Trainer implements Runnable {
             Instance instance = validationSet.instance(i);
             double classLabelPrediction = network.classify(instance);
             double classLabel = instance.classValue();
-            if (classLabelPrediction == 1.0 && classLabelPrediction == classLabel)
+            if (classLabel > 0 && classLabelPrediction > 0)
                 numTruePositives++;
-            else if (classLabelPrediction == 1.0 && classLabelPrediction != classLabel)
-                numTrueNegatives++;
-            else if (classLabelPrediction != 1.0 && classLabelPrediction == classLabel)
-                numFalseNegatives++;
-            else
+            else if (classLabel > 0 && classLabelPrediction < 0)
                 numFalsePositives++;
+            else if (classLabelPrediction < 0 && classLabelPrediction < 0)
+                numTrueNegatives++;
+            else
+                numFalseNegatives++;
+            trueClasses[i] = classLabel;
+            confidences[i] = classLabelPrediction;
         }
 
         this.performanceMeasure = new PerformanceMeasure(numTruePositives, numFalsePositives, numTrueNegatives, numFalseNegatives);
     }
 
     public void trainNetwork() {
-
         for (int i = 0; i < trainingSet.size(); i++) {
             if (numberOfTrainingIterations <= 0)
                 network.trainUntilConvergence(trainingSet);
@@ -56,6 +65,6 @@ public class Trainer implements Runnable {
         trainNetwork();
         calculatePerformanceMeasure();
         performanceMeasures.add(performanceMeasure);
+        rocDataList.add(new ROCData(trueClasses, confidences));
     }
-
 }

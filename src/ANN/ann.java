@@ -1,9 +1,6 @@
 package ANN;
 
-import ANN.Training.OverallPerformance;
-import ANN.Training.PerformanceMeasure;
-import ANN.Training.Trainer;
-import ANN.Training.TrainingFactory;
+import ANN.Training.*;
 import ANN.Utils.NetworkFactory;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
@@ -55,13 +52,14 @@ public class ann {
     }
 
     public static OverallPerformance performStratifiedCrossValidation(Network[] networks, TrainingFactory trainingFactory, int numberOfTrainingIterations) throws InterruptedException, TimeoutException {
-        List<PerformanceMeasure> performanceMeasuresList = Collections.synchronizedList(new ArrayList<PerformanceMeasure>());
+        List<PerformanceMeasure> performanceMeasuresList = Collections.synchronizedList(new ArrayList<PerformanceMeasure>(NUM_INDEPENDENT_TESTS));
+        List<ROCData> rocDataList = Collections.synchronizedList(new ArrayList<ROCData>(NUM_INDEPENDENT_TESTS));
         DataSet[] trainingSets = trainingFactory.getTrainingSets();
         DataSet[] validationSets = trainingFactory.getValidationSets();
 
         ExecutorService es = Executors.newCachedThreadPool();
         for (int i = 0; i < NUM_INDEPENDENT_TESTS; i++) {
-            es.execute(new Trainer(performanceMeasuresList, networks[i], trainingSets[i], validationSets[i], numberOfTrainingIterations));
+            es.execute(new Trainer(performanceMeasuresList, rocDataList, networks[i], trainingSets[i], validationSets[i], numberOfTrainingIterations));
         }
         es.shutdown();
         boolean finished = es.awaitTermination(60, TimeUnit.MINUTES);
@@ -70,7 +68,8 @@ public class ann {
             throw new TimeoutException("Testing timed out... > 60 minutes");
 
         PerformanceMeasure[] performanceMeasures = performanceMeasuresList.toArray(new PerformanceMeasure[performanceMeasuresList.size()]);
-        return new OverallPerformance(performanceMeasures);
+        ROCData[] rocDatas = rocDataList.toArray(new ROCData[rocDataList.size()]);
+        return new OverallPerformance(performanceMeasures, rocDatas);
     }
 
     public static void printPerformanceBreakdown(OverallPerformance performance) {

@@ -92,7 +92,26 @@ public class Utils {
         }
     }
 
+    public static double calculateSpecificity(int numTrueNegatives, int numFalsePositives) {
+        return numTrueNegatives / (numTrueNegatives + numFalsePositives);
+    }
 
+    public static double calculateRecall(int numTruePositives, int numFalseNegatives) {
+        return numTruePositives / (numTruePositives + numFalseNegatives);
+    }
 
+    public static double getTrapezoidalArea(double a, double b, double h) {
+        return ((a + b) / 2) * h;
+    }
+
+    public static double[] flattenDoubleArray(double[][] mdarray, int mdArrayFullSize) {
+        double[] flattenedArray = new double[mdArrayFullSize];
+        for (int i = 0; i < mdarray.length; i++) {
+            for (int j = 0; j < mdarray[i].length; j++) {
+                flattenedArray[i] = mdarray[i][j];
+            }
+        }
+        return flattenedArray;
+    }
 
 }

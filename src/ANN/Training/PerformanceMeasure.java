@@ -1,5 +1,7 @@
 package ANN.Training;
 
+import ANN.Utils.Utils;
+
 public class PerformanceMeasure {
 
     private final int numTruePositives;
@@ -23,7 +25,11 @@ public class PerformanceMeasure {
     }
 
     public double calculateRecall() {
-        return numTruePositives / (numTruePositives + numFalseNegatives);
+        return Utils.calculateRecall(numTruePositives, numFalseNegatives);
+    }
+
+    public double calculateSpecificity() {
+        return Utils.calculateSpecificity(numTrueNegatives, numFalsePositives);
     }
 
 }
