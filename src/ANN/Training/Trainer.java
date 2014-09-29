@@ -5,30 +5,55 @@ import ANN.Utils.Utils;
 import Parsing.data.DataSet;
 import Parsing.data.Instance;
 
-import java.util.Arrays;
-
 public class Trainer {
 
     private Network network;
     private int numberOfTrainingIterations;
+    private DataSet dataSet;
+    private int numberOfFolds;
     private DataSet[] trainingSets;
 
-    public Trainer(Network network, DataSet dataSet, int numberOfTrainingIterations) {
+    public Trainer(Network network, DataSet dataSet, int numberOfTrainingIterations, int numberOfFolds) {
         this.network = network;
-        this.trainingSets = getTrainingSets(getFolds(dataSet, 5));
+        this.dataSet = dataSet;
         this.numberOfTrainingIterations = numberOfTrainingIterations;
+        this.numberOfFolds = numberOfFolds;
+        this.trainingSets = getTrainingSets(getRandomizedStratifiedFolds());
     }
 
-    private DataSet[] getFolds(final DataSet dataSet, final int numberOfFolds) {
+    private int getMeanSplitIndex() {
+        return (int) Math.ceil(dataSet.mean(dataSet.classIndex()) * dataSet.size());
+    }
+
+    private DataSet[] getRandomizedStratifiedFolds() {
+        dataSet.sort(dataSet.classIndex());
+        DataSet classADataSet = getSubsetOfDataSet(dataSet, 0, getMeanSplitIndex());
+        DataSet classBDataSet = getSubsetOfDataSet(dataSet, getMeanSplitIndex(), dataSet.size());
+        DataSet[] classAFolds = getFolds(classADataSet);
+        DataSet[] classBFolds = getFolds(classBDataSet);
+
+        DataSet[] stratifiedFolds = new DataSet[numberOfFolds];
+        DataSet[] dataSetsToCombine;
+        for (int i = 0; i < numberOfFolds; i++) {
+            dataSetsToCombine = new DataSet[2];
+            dataSetsToCombine[0] = classAFolds[i];
+            dataSetsToCombine[1] = classBFolds[i];
+            stratifiedFolds[i] = Utils.getShuffledDataSet(combineDataSets(dataSetsToCombine));
+        }
+
+        return stratifiedFolds;
+    }
+
+    private DataSet[] getFolds(DataSet homogeneousDataSet) {
         DataSet[] folds = new DataSet[numberOfFolds];
 
-        int sizeOfSubset = dataSet.size() / numberOfFolds;
+        int sizeOfSubset = homogeneousDataSet.size() / numberOfFolds;
         int startIndex = 0, stopIndex = sizeOfSubset;
         for (int i = 0; i < numberOfFolds; i++) {
-            folds[i] = getSubsetOfDataSet(dataSet, startIndex, stopIndex);
+            folds[i] = getSubsetOfDataSet(homogeneousDataSet, startIndex, stopIndex);
             startIndex += sizeOfSubset;
             if (i == numberOfFolds - 1)
-                stopIndex = dataSet.size() - 1;
+                stopIndex = homogeneousDataSet.size() - 1;
             else
                 stopIndex += sizeOfSubset;
         }
@@ -70,7 +95,7 @@ public class Trainer {
 
         for (int i = 0; i < folds.length; i++) {
             DataSet[] trainingSet = new DataSet[sizeOfTrainingSet];
-            for (int j = 0; j < folds.length - 1; j++) {
+            for (int j = 0; j < sizeOfTrainingSet; j++) {
                 int foldIndexToInclude = sizeOfTrainingSet - 1 - i - j;
                 if (foldIndexToInclude < 0)
                     foldIndexToInclude = sizeOfTrainingSet - foldIndexToInclude;

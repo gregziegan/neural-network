@@ -1,16 +1,10 @@
 package ANN;
 
 import ANN.Training.AveragedPerformanceMeasure;
-import ANN.Training.PerformanceMeasure;
 import ANN.Training.Trainer;
 import ANN.Utils.NetworkFactory;
-import ANN.Utils.Utils;
-import Parsing.data.Attribute;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 public class ann {
 
@@ -28,14 +22,11 @@ public class ann {
         DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
-        System.out.println("Randomly shuffling data...");
-        DataSet shuffledDataSet = Utils.getShuffledDataSet(dataSet);
-
         System.out.println("Creating Artificial Neural Network...");
         Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
 
         System.out.println("Training network with supplied data...\n\n");
-        Trainer trainer = new Trainer(network, shuffledDataSet, numberOfTrainingIterations);
+        Trainer trainer = new Trainer(network, dataSet, numberOfTrainingIterations, 5);
         AveragedPerformanceMeasure performance = trainer.trainWithStratifiedCrossValidation();
 
         System.out.println("\t--\tPerformance Breakdown\t--");
