@@ -93,19 +93,7 @@ public class Utils {
         }
     }
 
-    public static DataSet[] getTrainingSets(final DataSet dataSet, final int numberOfSets) {
-        DataSet[] trainingSets = new DataSet[numberOfSets];
 
-        for (int i = 0; i < numberOfSets; i++) {
-            trainingSets[i] = new DataSet(dataSet);
-            Instance[] instances = new Instance[dataSet.size()];
-            for (int j = 0; j < dataSet.size() / 5; j++) {
-                instances[j] = dataSet.instance(j);
-            }
-            trainingSets[i].add(instances);
-        }
 
-        return trainingSets;
-    }
 
 }

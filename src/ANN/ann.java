@@ -31,21 +31,17 @@ public class ann {
         System.out.println("Randomly shuffling data...");
         DataSet shuffledDataSet = Utils.getShuffledDataSet(dataSet);
 
-        System.out.println("Producing training sets...");
-        DataSet[] trainingSets = Utils.getTrainingSets(shuffledDataSet, 5);
-
         System.out.println("Creating Artificial Neural Network...");
         Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
 
         System.out.println("Training network with supplied data...\n\n");
-        AveragedPerformanceMeasure performance = Trainer.trainWithStratifiedCrossValidation(network, trainingSets, numberOfTrainingIterations);
+        Trainer trainer = new Trainer(network, shuffledDataSet, numberOfTrainingIterations);
+        AveragedPerformanceMeasure performance = trainer.trainWithStratifiedCrossValidation();
 
         System.out.println("\t--\tPerformance Breakdown\t--");
         System.out.println(String.format("Accuracy: %f", performance.getAccuracy()));
         System.out.println(String.format("Precision: %f", performance.getPrecision()));
         System.out.println(String.format("Recall: %f", performance.getRecall()));
-
-
 
     }
 
