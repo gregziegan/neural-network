@@ -13,7 +13,6 @@ public class Utils {
 
     public static double getLoss(final double output, final double expected) {
         return (output - expected);
-
     }
 
     public static double evaluateSigmoidDerivative(final double exponent) {

@@ -14,7 +14,7 @@ public class Trainer {
     private DataSet[] trainingSets;
 
     public Trainer(Network network, DataSet dataSet, int numberOfTrainingIterations, int numberOfFolds) {
-        this.network = network;
+        this.network = network;  // TODO Should each training set happen on independent, fresh networks?
         this.dataSet = dataSet;
         this.numberOfTrainingIterations = numberOfTrainingIterations;
         this.numberOfFolds = numberOfFolds;
@@ -133,16 +133,19 @@ public class Trainer {
         return new PerformanceMeasure(numTruePositives, numFalsePositives, numTrueNegatives, numFalseNegatives);
     }
 
-    public AveragedPerformanceMeasure trainWithStratifiedCrossValidation() {
+    public OverallPerformance trainWithStratifiedCrossValidation() {
         DataSet[] testSets = getTestSets();
         PerformanceMeasure[] performanceMeasures = new PerformanceMeasure[testSets.length];
 
         for (int i = 0; i < trainingSets.length; i++) {
-            network.train(trainingSets[i], numberOfTrainingIterations);
+            if (numberOfTrainingIterations <= 0)
+                network.trainUntilConvergence(trainingSets[i]);
+            else
+                network.train(trainingSets[i], numberOfTrainingIterations);
             performanceMeasures[i] = getPerformanceMeasure(testSets[i]);
         }
 
-        return new AveragedPerformanceMeasure(performanceMeasures);
+        return new OverallPerformance(performanceMeasures);
     }
 
 }

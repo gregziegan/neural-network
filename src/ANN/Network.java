@@ -52,9 +52,25 @@ public class Network {
         return weightDecay;
     }
 
+    public void trainUntilConvergence(DataSet trainingSet) {
+        for (int i = 0; i < trainingSet.size(); i++)
+            trainOnInstance(trainingSet.instance(i));
+    }
+
     public void train(DataSet trainingSet, int numberOfTrainingIterations) {
-        for (int i = 0; i < trainingSet.size(); i++) {
+        for (int i = 0; i < trainingSet.size(); i++)
             trainOnInstance(trainingSet.instance(i), numberOfTrainingIterations);
+    }
+
+    public void trainOnInstance(Instance instance) {
+        double delta = Double.POSITIVE_INFINITY;
+        double expectedClassValue = instance.classValue();
+        double actualClassValue;
+        while (delta >= 0.01) {
+            feedForward(Utils.getInstanceValues(instance));
+            backPropagate(expectedClassValue);
+            actualClassValue = getOutputNeuron().getOutputValue();
+            delta = Math.abs(expectedClassValue - actualClassValue);
         }
     }
 
@@ -79,9 +95,9 @@ public class Network {
             Neuron hiddenN = neurons[hiddenNeuron];
             for (int neuron = 0; neuron < numberOfInputNeurons; neuron++) {
                 Neuron inputNeuron = neurons[neuron];
-                double downstream = (weightChanges[hiddenNeuron][0] * this.weights[hiddenNeuron][0] / hiddenN.getOutputValue() ); // TODO figure out what dividing by is
-                double weightChange = Utils.getWeightChangeValueHiddenLayer(inputNeuron.getOutputValue(), hiddenN.getOutputValue(), downstream );
-                weightChanges[neuron][hiddenNeuron] = weightChange;
+                double downstream = (weightChanges[hiddenNeuron][0] * this.weights[hiddenNeuron][0]) / hiddenN.getOutputValue(); // TODO figure out what dividing by is
+                double weightChange = Utils.getWeightChangeValueHiddenLayer(inputNeuron.getOutputValue(), hiddenN.getOutputValue(), downstream);
+                weightChanges[neuron][hiddenNeuron] = weightChange; // TODO add learning rate of 0.01 here?
             }
         }
 

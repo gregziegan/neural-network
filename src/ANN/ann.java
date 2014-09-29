@@ -1,6 +1,6 @@
 package ANN;
 
-import ANN.Training.AveragedPerformanceMeasure;
+import ANN.Training.OverallPerformance;
 import ANN.Training.Trainer;
 import ANN.Utils.NetworkFactory;
 import Parsing.data.DataFileProcessor;
@@ -27,13 +27,13 @@ public class ann {
 
         System.out.println("Training network with supplied data...\n\n");
         Trainer trainer = new Trainer(network, dataSet, numberOfTrainingIterations, 5);
-        AveragedPerformanceMeasure performance = trainer.trainWithStratifiedCrossValidation();
+        OverallPerformance performance = trainer.trainWithStratifiedCrossValidation();
 
         System.out.println("\t--\tPerformance Breakdown\t--");
-        System.out.println(String.format("Accuracy: %f", performance.getAccuracy()));
-        System.out.println(String.format("Precision: %f", performance.getPrecision()));
-        System.out.println(String.format("Recall: %f", performance.getRecall()));
-
+        System.out.println(String.format("Accuracy: %f %f", performance.getMeanAccuracy(), performance.getStdDevAccuracy()));
+        System.out.println(String.format("Precision: %f %f", performance.getMeanPrecision(), performance.getStdDevPrecision()));
+        System.out.println(String.format("Recall: %f %f", performance.getMeanRecall(), performance.getStdDevRecall()));
+        System.out.println(String.format("Area under ROC: %f", performance.getAreaUnderROC()));
     }
 
 }
