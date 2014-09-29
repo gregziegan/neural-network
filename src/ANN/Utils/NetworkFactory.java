@@ -18,11 +18,6 @@ public class NetworkFactory {
         return new Network(neurons, initialWeights, weightDecay, numberOfHiddenNeurons);
     }
 
-    public static Network getModifiedNetwork(Network network, double[] biases, double[][] weights) {
-        Neuron[] neurons = NeuronFactory.createModifiedNeurons(network.getNeurons(), biases);
-        return new Network(neurons, weights, network.getWeightDecay(), network.getNumberOfHiddenNeurons());
-    }
-
     public static double[][] getInitialWeights(final Neuron[] neurons, final int numberOfInputNeurons, final int numberOfHiddenNeurons) {
         double[][] weights = new double[numberOfInputNeurons+numberOfHiddenNeurons][];
         Random random = new Random(12345);
@@ -47,15 +42,4 @@ public class NetworkFactory {
         return weights;
     }
 
-    public static double[][] getUpdatedWeights(final double[][] weights) {
-        double[][] updatedWeights = new double[weights.length][weights[0].length];
-
-        for (int i = 0; i < weights.length; i++) {
-            for (int j = 0; j < weights[i].length; j++) {
-                // TODO updatedWeights[i][j] =
-            }
-        }
-
-        return updatedWeights;
-    }
 }

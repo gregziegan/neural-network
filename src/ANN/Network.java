@@ -1,6 +1,7 @@
 package ANN;
 
 import ANN.Utils.Utils;
+import Parsing.data.DataSet;
 import Parsing.data.Instance;
 
 import java.util.Arrays;
@@ -51,7 +52,20 @@ public class Network {
         return weightDecay;
     }
 
-    public void backPropagate(int classLabel) {
+    public void train(DataSet trainingSet, int numberOfTrainingIterations) {
+        for (int i = 0; i < trainingSet.size(); i++) {
+            trainOnInstance(trainingSet.instance(i), numberOfTrainingIterations);
+        }
+    }
+
+    public void trainOnInstance(Instance instance, int numberOfTrainingIterations) {
+        for (int i = 0; i < numberOfTrainingIterations; i++) {
+            feedForward(Utils.getInstanceValues(instance));
+            backPropagate(instance.classValue());
+        }
+    }
+
+    public void backPropagate(double classLabel) {
         double[][] weightChanges = weights.clone();
         Neuron outputNeuron = getOutputNeuron();
 
@@ -129,7 +143,6 @@ public class Network {
 
         /* Feed forward to Output Layer */
         int outputNeuronIndex = neurons.length - 1;
-
         double[] inputWeights = getNeuronInputWeights(outputNeuronIndex);
         double[] inputValues = getNeuronInputs(outputNeuronIndex);
         neurons[outputNeuronIndex].updateOutput(inputWeights, inputValues);
@@ -137,13 +150,11 @@ public class Network {
         return neurons[outputNeuronIndex].getOutputValue();
     }
 
-    public boolean classify(Instance instance) {
-        double[] inputLayerValues = new double[instance.length() - 2];
-        for (int i = 1; i < instance.length() - 1; i++) {
-            inputLayerValues[i] = instance.value(i);
-        }
+    public double classify(Instance instance) {
+        double[] inputLayerValues = Utils.getInstanceValues(instance);
         double certainty = feedForward(inputLayerValues);
-
-        return certainty >= 0.5;
+        if (certainty >= 0.5)
+            return 1.0;
+        return 0.0;
     }
 }

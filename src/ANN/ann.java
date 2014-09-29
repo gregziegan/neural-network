@@ -1,12 +1,14 @@
 package ANN;
 
+import ANN.Training.AveragedPerformanceMeasure;
+import ANN.Training.PerformanceMeasure;
+import ANN.Training.Trainer;
 import ANN.Utils.NetworkFactory;
 import ANN.Utils.Utils;
 import Parsing.data.Attribute;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
 
-import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,28 +19,34 @@ public class ann {
         if (args.length != 4)
             throw new IllegalArgumentException("Script takes 4 arguments.");
 
-
         String filename = args[0];
         int numberOfHiddenNeurons = Integer.parseInt(args[1]);
         float weightDecay = Float.parseFloat(args[2]);
         int numberOfTrainingIterations = Integer.parseInt(args[3]);
 
-        Random random = new Random();
-        random.setSeed(12345);
+        System.out.println("Reading in data...");
         DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
-        ArrayList<Attribute> attributes = new ArrayList<Attribute>(metaInfo.numAttributes());
-        int attributeNumbers = metaInfo.numAttributes();
-        for(int i = 0; i < attributeNumbers;i++)
-            attributes.add(metaInfo.attribute(i));
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
+        System.out.println("Randomly shuffling data...");
         DataSet shuffledDataSet = Utils.getShuffledDataSet(dataSet);
-        DataSet[] trainingSets = Utils.getTrainingSets(dataSet, 5);
 
+        System.out.println("Producing training sets...");
+        DataSet[] trainingSets = Utils.getTrainingSets(shuffledDataSet, 5);
+
+        System.out.println("Creating Artificial Neural Network...");
         Network network = NetworkFactory.createInitialNetwork(dataSet, weightDecay, numberOfHiddenNeurons);
 
+        System.out.println("Training network with supplied data...\n\n");
+        AveragedPerformanceMeasure performance = Trainer.trainWithStratifiedCrossValidation(network, trainingSets, numberOfTrainingIterations);
 
-        Trainer.getTrainedNetwork(network, numberOfTrainingIterations);
+        System.out.println("\t--\tPerformance Breakdown\t--");
+        System.out.println(String.format("Accuracy: %f", performance.getAccuracy()));
+        System.out.println(String.format("Precision: %f", performance.getPrecision()));
+        System.out.println(String.format("Recall: %f", performance.getRecall()));
+
+
+
     }
 
 }

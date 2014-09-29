@@ -4,40 +4,43 @@ import ANN.Utils.Utils;
 
 public class Neuron {
 
+    public final int id;
     private double activationThreshold;
     private Layer layer;
     private double inputValue;
     private double outputValue;
 
-    public Neuron(double activationThreshold, Layer layer) {
-        this.activationThreshold = activationThreshold;
+    public Neuron(int id, Layer layer) {
+        this.id = id;
         this.layer = layer;
     }
 
-    public Neuron(Layer layer, double inputUnit) {
-        assert layer == Layer.INPUT;
-        this.layer = layer;
-        this.inputValue = inputUnit;
-        this.activationThreshold = 0;
+    public Neuron(int id, Layer layer, double activationThreshold) {
+        this(id, layer);
+        this.activationThreshold = activationThreshold;
     }
 
     public double getActivationThreshold() {
-        assert layer != Layer.INPUT;
+        if (layer == Layer.INPUT)
+            throw new IllegalStateException("Input Neuron does not have an activation threshold.");
         return activationThreshold;
     }
 
     public void setActivationThreshold(double activationThreshold) {
-        assert layer != Layer.INPUT;
+        if (layer == Layer.INPUT)
+            throw new IllegalStateException("Input Neuron does not have an activation threshold.");
         this.activationThreshold = activationThreshold;
     }
 
     public void setInputValue(double inputValue) {
-        assert layer == Layer.INPUT;
+        if (layer != Layer.INPUT)
+            throw new IllegalStateException("Non-input layer neurons do not have a single input value");
         this.inputValue = inputValue;
     }
 
     public double getInputValue() {
-        assert layer == Layer.INPUT;
+        if (layer != Layer.INPUT)
+            throw new IllegalStateException("Non-input layer neurons do not have a single input value");
         return inputValue;
     }
 
@@ -57,7 +60,6 @@ public class Neuron {
     }
 
     public String toString() {
-        String hashCode = Integer.toHexString(System.identityHashCode(this));
-        return "<Neuron: Layer: " + this.layer + " Addr: " + hashCode.substring(0, 5) + ">";
+        return String.format("<Neuron: id: %d layer: %s>", this.id, this.layer);
     }
 }
