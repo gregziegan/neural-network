@@ -13,16 +13,14 @@ public class Network {
     private final float weightDecay;
     private int numberOfHiddenNeurons;
     private int numberOfInputNeurons;
-    private int numberOfBiases;
     private static final double LEARNING_RATE = 0.01;
 
-    public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons, int numberOfBiases) {
+    public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
         this.weights = weights;
         this.weightDecay = weightDecay;
         this.numberOfHiddenNeurons = numberOfHiddenNeurons;
         this.numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1;
-        this.numberOfBiases = numberOfBiases;
     }
 
     public Neuron[] getNeurons() {
@@ -38,12 +36,12 @@ public class Network {
     }
 
     public Neuron[] getInputNeurons() {
-        int numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1 - numberOfBiases;
+        int numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1 - 2;
         return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
     }
 
     public Neuron[] getHiddenNeurons() {
-        int hiddenNeuronStartIndex = this.neurons.length - numberOfBiases - 1 - numberOfHiddenNeurons;
+        int hiddenNeuronStartIndex = this.neurons.length - 2 - 1 - numberOfHiddenNeurons;
         return Arrays.copyOfRange(this.neurons, hiddenNeuronStartIndex, this.neurons.length - 1, Neuron[].class);
     }
 
@@ -123,13 +121,13 @@ public class Network {
         double[] inputWeights;
 
         if (neuronLayer == Layer.OUTPUT) {
-            inputWeights = new double[numberOfHiddenNeurons];
-            for (int i = numberOfInputNeurons; i < numberOfInputNeurons + numberOfHiddenNeurons; i++) {
-                inputWeights[i - numberOfInputNeurons] = this.weights[i][neuronIndex];
+            inputWeights = new double[numberOfHiddenNeurons + 1];
+            for (int i = numberOfInputNeurons + 1; i < numberOfInputNeurons + 1 + numberOfHiddenNeurons + 1; i++) {
+                inputWeights[i - (numberOfInputNeurons + 1)] = this.weights[i][neuronIndex];
             }
         } else {
-            inputWeights = new double[numberOfInputNeurons];
-            for (int i = 0; i < numberOfInputNeurons; i++) {
+            inputWeights = new double[numberOfInputNeurons + 1];
+            for (int i = 0; i < numberOfInputNeurons + 1; i++) {
                 inputWeights[i] = this.weights[i][neuronIndex];
             }
         }
@@ -144,14 +142,14 @@ public class Network {
         double[] neuronInputs;
 
         if (neuronLayer == Layer.HIDDEN) {
-            neuronInputs = new double[numberOfInputNeurons];
-            for (int i = 0; i < numberOfInputNeurons; i++) {
+            neuronInputs = new double[numberOfInputNeurons + 1];
+            for (int i = 0; i < numberOfInputNeurons + 1; i++) {
                 neuronInputs[i] = this.neurons[i].getOutputValue();
             }
         } else {
-            neuronInputs = new double[numberOfHiddenNeurons];
-            for (int i = numberOfInputNeurons; i < numberOfInputNeurons + numberOfHiddenNeurons; i++) {
-                neuronInputs[i - numberOfInputNeurons] = this.neurons[i].getOutputValue();
+            neuronInputs = new double[numberOfHiddenNeurons + 1];
+            for (int i = numberOfInputNeurons + 1; i < numberOfInputNeurons + 1 + numberOfHiddenNeurons + 1; i++) {
+                neuronInputs[i - (numberOfInputNeurons + 1)] = this.neurons[i].getOutputValue();
             }
         }
 
@@ -161,6 +159,7 @@ public class Network {
     public double feedForward(double[] inputLayerValues) {
         for (int i = 0; i < numberOfInputNeurons; i++) {
             neurons[i].setInputValue(inputLayerValues[i]);
+            neurons[i].updateOutput(new double[0], new double[0]);
         }
 
         /* Feed forward to Hidden Layer */
