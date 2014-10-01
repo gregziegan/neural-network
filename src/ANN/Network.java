@@ -54,31 +54,31 @@ public class Network {
     }
 
     public void trainUntilConvergence(DataSet trainingSet) {
-        for (int i = 0; i < trainingSet.size(); i++)
-            trainOnInstance(trainingSet.instance(i));
-    }
-
-    public void train(DataSet trainingSet, int numberOfTrainingIterations) {
-        for (int i = 0; i < trainingSet.size(); i++)
-            trainOnInstance(trainingSet.instance(i), numberOfTrainingIterations);
-    }
-
-    public void trainOnInstance(Instance instance) {
-        double delta = Double.POSITIVE_INFINITY;
-        double expectedClassValue = instance.classValue();
+        double averageDisparity = Double.POSITIVE_INFINITY;
+        double expectedClassValue;
         double actualClassValue;
-        while (delta >= 0.01) {
-            feedForward(Utils.getInstanceValues(instance));
-            backPropagate(expectedClassValue);
-            actualClassValue = getOutputNeuron().getOutputValue();
-            delta = Math.abs(expectedClassValue - actualClassValue);
+
+        while (averageDisparity >= 0.01) {
+            averageDisparity = Double.POSITIVE_INFINITY;
+            for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
+                Instance instance = trainingSet.instance(instanceIndex);
+                expectedClassValue = instance.classValue();
+                feedForward(Utils.getInstanceValues(instance));
+                backPropagate(expectedClassValue);
+                actualClassValue = getOutputNeuron().getOutputValue();
+                averageDisparity += Math.abs(expectedClassValue - actualClassValue);
+            }
+            averageDisparity = averageDisparity / trainingSet.size();
         }
     }
 
-    public void trainOnInstance(Instance instance, int numberOfTrainingIterations) {
+    public void train(DataSet trainingSet, int numberOfTrainingIterations) {
         for (int i = 0; i < numberOfTrainingIterations; i++) {
-            feedForward(Utils.getInstanceValues(instance));
-            backPropagate(instance.classValue());
+            for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
+                Instance instance = trainingSet.instance(instanceIndex);
+                feedForward(Utils.getInstanceValues(instance));
+                backPropagate(instance.classValue());
+            }
         }
     }
 
