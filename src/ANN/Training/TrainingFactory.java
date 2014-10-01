@@ -68,7 +68,7 @@ public class TrainingFactory {
 
     private DataSet getSubsetOfDataSet(final DataSet dataSet, int startIndex, int stopIndex) {
         DataSet subset = new DataSet(dataSet);
-        Instance[] instances = new Instance[dataSet.size()];
+        Instance[] instances = new Instance[stopIndex - startIndex];
         for (int j = startIndex; j < stopIndex; j++) {
             instances[j] = dataSet.instance(j);
         }
