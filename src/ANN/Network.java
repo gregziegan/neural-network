@@ -13,6 +13,7 @@ public class Network {
     private float weightDecay;
     private int numberOfHiddenNeurons;
     private int numberOfInputNeurons;
+    private static final double LEARNING_RATE = 0.01;
 
     public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
@@ -85,12 +86,14 @@ public class Network {
         double[][] weightChanges = weights.clone();
         Neuron outputNeuron = getOutputNeuron();
 
+        // Back propagate From output layer
         for (int neuron = numberOfInputNeurons; neuron < numberOfHiddenNeurons; neuron++) {
             Neuron hiddenNeuron = neurons[neuron];
             double weightChange = Utils.getWeightChangeValueOutputLayer(hiddenNeuron.getOutputValue(), outputNeuron.getOutputValue(), classLabel);
             weightChanges[neuron][0] = weightChange;
         }
 
+        // Back propagate from hidden layer
         for (int hiddenNeuron = numberOfInputNeurons; hiddenNeuron < numberOfHiddenNeurons; hiddenNeuron++) {
             Neuron hiddenN = neurons[hiddenNeuron];
             for (int neuron = 0; neuron < numberOfInputNeurons; neuron++) {
@@ -98,6 +101,13 @@ public class Network {
                 double downstream = (weightChanges[hiddenNeuron][0] * this.weights[hiddenNeuron][0]) / hiddenN.getOutputValue(); // TODO figure out what dividing by is
                 double weightChange = Utils.getWeightChangeValueHiddenLayer(inputNeuron.getOutputValue(), hiddenN.getOutputValue(), downstream);
                 weightChanges[neuron][hiddenNeuron] = weightChange; // TODO add learning rate of 0.01 here?
+            }
+        }
+
+        // Weight update
+        for (int neuronFrom = 0 ; neuronFrom < weightChanges.length; neuronFrom++) {
+            for (int neuronTo = 0; neuronTo < weightChanges[neuronFrom].length; neuronTo++) {
+                this.weights[neuronFrom][neuronTo] -= LEARNING_RATE * weightChanges[neuronFrom][neuronTo];
             }
         }
 
