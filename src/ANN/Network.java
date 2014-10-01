@@ -14,17 +14,13 @@ public class Network {
     private final int numberOfHiddenNeurons;
     private final int numberOfInputNeurons;
     private static final double LEARNING_RATE = 0.01;
-    private final int numberOfInputNeuronsWithBias;
-    private final int numberOfHiddenNeuronsWithBias;
 
     public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
         this.weights = weights;
         this.weightDecay = weightDecay;
         this.numberOfHiddenNeurons = numberOfHiddenNeurons;
-        this.numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1;
-        this.numberOfHiddenNeuronsWithBias = this.numberOfHiddenNeurons + 1;
-        this.numberOfInputNeuronsWithBias = this.numberOfInputNeurons + 1;
+        this.numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1 - 2;
     }
 
     public Neuron[] getNeurons() {
@@ -40,8 +36,7 @@ public class Network {
     }
 
     public Neuron[] getInputNeurons() {
-        int numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1 - 2;
-        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
+        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons + 1, Neuron[].class);
     }
 
     public Neuron[] getHiddenNeurons() {
@@ -120,19 +115,20 @@ public class Network {
 
     public double[] getNeuronInputWeights(int neuronIndex) {
         Layer neuronLayer = neurons[neuronIndex].getLayer();
-        assert neuronLayer != Layer.INPUT;
+        if (neuronLayer == Layer.INPUT)
+            throw new IllegalStateException("Only HIDDEN & OUTPUT Layer Neurons have input weights");
 
         double[] inputWeights;
 
         if (neuronLayer == Layer.OUTPUT) {
             inputWeights = new double[numberOfHiddenNeurons + 1];
             for (int i = numberOfInputNeurons + 1; i < numberOfInputNeurons + 1 + numberOfHiddenNeurons + 1; i++) {
-                inputWeights[i - (numberOfInputNeurons + 1)] = this.weights[i][neuronIndex];
+                inputWeights[i - (numberOfInputNeurons + 1)] = this.weights[i][neuronIndex - numberOfInputNeurons - numberOfHiddenNeurons - 2];
             }
         } else {
             inputWeights = new double[numberOfInputNeurons + 1];
             for (int i = 0; i < numberOfInputNeurons + 1; i++) {
-                inputWeights[i] = this.weights[i][neuronIndex];
+                inputWeights[i] = this.weights[i][neuronIndex - numberOfInputNeurons - 1];
             }
         }
 

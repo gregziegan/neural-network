@@ -26,13 +26,13 @@ public class NetworkFactory {
     }
 
     public static double[][] getInitialWeights(final int numberOfInputNeurons, final int numberOfHiddenNeurons) {
-        double[][] weights = new double[numberOfInputNeurons+numberOfHiddenNeurons][];
+        double[][] weights = new double[numberOfInputNeurons+numberOfHiddenNeurons + 2][];
         Random random = new Random(12345);
 
         double[] initialWeightChoices = new double[]{-0.1, 0.1};
         double randomWeight;
 
-        for (int i = 0; i < numberOfInputNeurons; i++) {
+        for (int i = 0; i < numberOfInputNeurons + 1; i++) {
             weights[i] = new double[numberOfHiddenNeurons];
             for (int j = 0; j < numberOfHiddenNeurons; j++) {
                 randomWeight = initialWeightChoices[random.nextInt(2)];
@@ -40,7 +40,7 @@ public class NetworkFactory {
             }
         }
 
-        for (int i = numberOfInputNeurons; i < numberOfInputNeurons + numberOfHiddenNeurons; i++) {
+        for (int i = numberOfInputNeurons + 1; i < numberOfInputNeurons + 1 + numberOfHiddenNeurons + 1; i++) {
             weights[i] = new double[1];
             randomWeight = initialWeightChoices[random.nextInt(2)];
             weights[i][0] = randomWeight;
