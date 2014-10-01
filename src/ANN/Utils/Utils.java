@@ -36,7 +36,7 @@ public class Utils {
         }
         double sum = 0;
         for(int i = 0; i < a.length; i++){
-            sum += a[i] * b[i];
+            sum += (a[i] * b[i]);
         }
         return sum;
     }
@@ -70,13 +70,13 @@ public class Utils {
 
     public static double[] getInstanceValuesWithBias(final Instance instance) {
 
-        double[] instanceValues = getInstanceValues(instance);
-        double[] instanceValuesWithBias =  Arrays.copyOf(instanceValues, instanceValues.length + 1);
+        double[] values = new double[instance.length() -1];
+        for (int i = 1; i < instance.length() -1; i++) {
+            values[i-1] = instance.value(i);
+        }
+        values[values.length -1] = -1.0;
 
-        // Add bias neuron value
-        instanceValuesWithBias[instanceValuesWithBias.length -1] = -1.0;
-
-        return instanceValuesWithBias;
+        return values;
     }
 
     public static DataSet getShuffledDataSet(final DataSet dataSet) {
