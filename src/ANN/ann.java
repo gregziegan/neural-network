@@ -35,7 +35,8 @@ public class ann {
         Network[] networks = NetworkFactory.getSeveralNetworkCopies(NUM_INDEPENDENT_TESTS, dataSet, weightDecay, numberOfHiddenNeurons);
 
         System.out.println("Generating five-fold stratified training and validation sets...");
-        TrainingFactory trainingFactory = new TrainingFactory(dataSet, NUM_INDEPENDENT_TESTS);
+        TrainingFactory trainingFactory = new TrainingFactory();
+        trainingFactory.populateTrainingAndValidationSets(dataSet, NUM_INDEPENDENT_TESTS);
 
         System.out.println("Training network with supplied data...\n\n");
         OverallPerformance performance;
@@ -54,8 +55,8 @@ public class ann {
     public static OverallPerformance performStratifiedCrossValidation(Network[] networks, TrainingFactory trainingFactory, int numberOfTrainingIterations) throws InterruptedException, TimeoutException {
         List<PerformanceMeasure> performanceMeasuresList = Collections.synchronizedList(new ArrayList<PerformanceMeasure>(NUM_INDEPENDENT_TESTS));
         List<ROCData> rocDataList = Collections.synchronizedList(new ArrayList<ROCData>(NUM_INDEPENDENT_TESTS));
-        DataSet[] trainingSets = trainingFactory.getTrainingSets();
-        DataSet[] validationSets = trainingFactory.getValidationSets();
+        DataSet[] trainingSets = trainingFactory.getCurrentTrainingSets();
+        DataSet[] validationSets = trainingFactory.getCurrentValidationSets();
 
         ExecutorService es = Executors.newCachedThreadPool();
         for (int i = 0; i < NUM_INDEPENDENT_TESTS; i++) {
