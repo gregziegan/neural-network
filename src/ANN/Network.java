@@ -8,12 +8,14 @@ import java.util.Arrays;
 
 public class Network {
 
-    private Neuron[] neurons;
-    private double[][] weights;
+    private final Neuron[] neurons;
+    private final double[][] weights;
     private final float weightDecay;
-    private int numberOfHiddenNeurons;
-    private int numberOfInputNeurons;
+    private final int numberOfHiddenNeurons;
+    private final int numberOfInputNeurons;
     private static final double LEARNING_RATE = 0.01;
+    private final int numberOfInputNeuronsWithBias;
+    private final int numberOfHiddenNeuronsWithBias;
 
     public Network(Neuron[] neurons, double[][] weights, float weightDecay, int numberOfHiddenNeurons) {
         this.neurons = neurons;
@@ -21,6 +23,8 @@ public class Network {
         this.weightDecay = weightDecay;
         this.numberOfHiddenNeurons = numberOfHiddenNeurons;
         this.numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1;
+        this.numberOfHiddenNeuronsWithBias = this.numberOfHiddenNeurons + 1;
+        this.numberOfInputNeuronsWithBias = this.numberOfInputNeurons + 1;
     }
 
     public Neuron[] getNeurons() {
