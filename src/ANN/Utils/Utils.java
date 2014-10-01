@@ -3,6 +3,9 @@ package ANN.Utils;
 import Parsing.data.DataSet;
 import Parsing.data.Instance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Utils {
@@ -63,6 +66,17 @@ public class Utils {
             values[i] = instance.value(i);
         }
         return values;
+    }
+
+    public static double[] getInstanceValuesWithBias(final Instance instance) {
+
+        double[] instanceValues = getInstanceValues(instance);
+        double[] instanceValuesWithBias =  Arrays.copyOf(instanceValues, instanceValues.length + 1);
+
+        // Add bias neuron value
+        instanceValuesWithBias[instanceValuesWithBias.length -1] = -1.0;
+
+        return instanceValuesWithBias;
     }
 
     public static DataSet getShuffledDataSet(final DataSet dataSet) {

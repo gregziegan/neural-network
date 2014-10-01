@@ -65,7 +65,7 @@ public class Network {
             for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
                 Instance instance = trainingSet.instance(instanceIndex);
                 expectedClassValue = instance.classValue();
-                feedForward(Utils.getInstanceValues(instance));
+                feedForward(Utils.getInstanceValuesWithBias(instance));
                 backPropagate(expectedClassValue);
                 actualClassValue = getOutputNeuron().getOutputValue();
                 averageDisparity += Math.abs(expectedClassValue - actualClassValue);
@@ -78,7 +78,7 @@ public class Network {
         for (int i = 0; i < numberOfTrainingIterations; i++) {
             for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
                 Instance instance = trainingSet.instance(instanceIndex);
-                feedForward(Utils.getInstanceValues(instance));
+                feedForward(Utils.getInstanceValuesWithBias(instance));
                 backPropagate(instance.classValue());
             }
         }
@@ -180,7 +180,7 @@ public class Network {
     }
 
     public double classify(Instance instance) {
-        double[] inputLayerValues = Utils.getInstanceValues(instance);
+        double[] inputLayerValues = Utils.getInstanceValuesWithBias(instance);
         double certainty = feedForward(inputLayerValues);
         if (certainty >= 0.5)
             return 1.0;
