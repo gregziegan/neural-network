@@ -70,7 +70,7 @@ public class TrainingFactory {
         DataSet subset = new DataSet(dataSet);
         Instance[] instances = new Instance[stopIndex - startIndex];
         for (int j = startIndex; j < stopIndex; j++) {
-            instances[j] = dataSet.instance(j);
+            instances[j - startIndex] = new Instance(dataSet.instance(j));
         }
         subset.add(instances);
         return subset;
