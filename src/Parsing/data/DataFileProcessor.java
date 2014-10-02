@@ -1,5 +1,7 @@
 package Parsing.data;
 
+import Parsing.util.Type;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,8 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import Parsing.util.Type;
 
 /**
  * This class provides some static methods for reading in .names and .data files, store them i DataSet class.

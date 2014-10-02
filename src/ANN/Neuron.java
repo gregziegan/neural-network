@@ -20,12 +20,6 @@ public class Neuron {
         this.inputValue = inputValue;
     }
 
-    public double getInputValue() {
-        if (layer != Layer.INPUT)
-            throw new IllegalStateException("Non-input layer neurons do not have a single input value");
-        return inputValue;
-    }
-
     public double getOutputValue() {
         return outputValue;
     }

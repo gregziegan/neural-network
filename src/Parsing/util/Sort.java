@@ -1,9 +1,8 @@
 package Parsing.util;
 
-import java.util.Vector;
-
-
 import Parsing.data.Instance;
+
+import java.util.Vector;
 
 /**
  * This class implement sorting the data in DataSet

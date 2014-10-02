@@ -1,11 +1,11 @@
 package Parsing.data;
 
+import Parsing.util.Sort;
+import Parsing.util.Type;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
-
-import Parsing.util.Sort;
-import Parsing.util.Type;
 
 /**
  * This class define a data set, methods to create, query, and modify data data is provided.

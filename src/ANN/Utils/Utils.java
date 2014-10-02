@@ -45,7 +45,7 @@ public class Utils {
 
         for (int i = 1; i < dataset.numAttributes() -1; i++) {
             means[i - 1] = dataset.mean(i);
-            stds[i-1] = dataset.stdDeviation(i);
+            stds[i - 1] = dataset.stdDeviation(i);
         }
 
         for (int exampleIndex = 0; exampleIndex < dataset.size(); exampleIndex++) {
@@ -54,14 +54,6 @@ public class Utils {
                 instance.setValue(attributeIndex, normalizeData(instance.value(attributeIndex), means[attributeIndex -1], stds[attributeIndex -1]));
             }
         }
-    }
-
-    public static double[] getInstanceValues(final Instance instance) {
-        double[] values = new double[instance.length()];
-        for (int i = 0; i < instance.length(); i++) {
-            values[i] = instance.value(i);
-        }
-        return values;
     }
 
     public static double[] getInstanceValuesWithBias(final Instance instance) {

@@ -1,8 +1,8 @@
 package Parsing.data;
 
-import java.util.Arrays;
-
 import Parsing.util.Type;
+
+import java.util.Arrays;
 
 /**
  * This class defines the attribute type for data

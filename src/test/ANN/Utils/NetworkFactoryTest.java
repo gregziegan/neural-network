@@ -1,4 +1,4 @@
-package test.ANN.Utils; 
+package test.ANN.Utils;
 
 import ANN.Layer;
 import ANN.Network;
@@ -6,12 +6,13 @@ import ANN.Utils.NetworkFactory;
 import Parsing.data.Attribute;
 import Parsing.data.DataSet;
 import Parsing.data.Instance;
-import org.junit.Test;
-import org.junit.Before; 
 import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Vector;
+
+import static org.junit.Assert.assertEquals;
 
 public class NetworkFactoryTest {
 

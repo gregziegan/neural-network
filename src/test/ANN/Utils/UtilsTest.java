@@ -1,4 +1,4 @@
-package test.ANN.Utils; 
+package test.ANN.Utils;
 
 import ANN.Utils.Utils;
 import Parsing.data.Attribute;
@@ -7,7 +7,6 @@ import Parsing.data.Instance;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.Vector;
 

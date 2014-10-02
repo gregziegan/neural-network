@@ -29,10 +29,6 @@ public class Network {
         this.numberOfInputNeuronsIncludingBias = this.numberOfInputNeurons + 1;
     }
 
-    public Neuron[] getNeurons() {
-        return neurons;
-    }
-
     public int getNumberOfHiddenNeurons() {
         return numberOfHiddenNeurons;
     }
@@ -43,11 +39,6 @@ public class Network {
 
     public Neuron[] getInputNeurons() {
         return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
-    }
-
-    public Neuron[] getHiddenNeurons() {
-        int hiddenNeuronStartIndex = this.neurons.length - 2 - 1 - numberOfHiddenNeurons;
-        return Arrays.copyOfRange(this.neurons, hiddenNeuronStartIndex, this.neurons.length - 1, Neuron[].class);
     }
 
     public Neuron getOutputNeuron() {
