@@ -19,17 +19,16 @@ public class ROCData {
     }
 
     public ROCData(ROCData[] rocDatas) {
-        double[][] allTrueClasses = new double[rocDatas.length][];
-        double[][] allConfidences = new double[rocDatas.length][];
-
-        dataSetSize = 0;
-        for (int i = 0; i < rocDatas.length; i++) {
-            dataSetSize += rocDatas[i].getDataSetSize();
-            allTrueClasses[i] = rocDatas[i].getTrueClasses();
-            allConfidences[i] = rocDatas[i].getConfidences();
+        trueClasses = new double[rocDatas.length * rocDatas[0].getDataSetSize()];
+        confidences = new double[rocDatas.length * rocDatas[0].getDataSetSize()];
+        int offset = 0;
+        for (int instanceIndex = 0; instanceIndex < rocDatas[0].getDataSetSize(); instanceIndex++) {
+            for (int rocDataIndex = 0; rocDataIndex < rocDatas.length; rocDataIndex++) {
+               trueClasses[instanceIndex + rocDataIndex + offset] = rocDatas[rocDataIndex].getTrueClass(instanceIndex);
+               confidences[instanceIndex + rocDataIndex + offset] = rocDatas[rocDataIndex].getConfidence(instanceIndex);
+            }
+            offset += rocDatas.length - 1;
         }
-        trueClasses = Utils.flattenDoubleArray(allTrueClasses, dataSetSize);
-        confidences = Utils.flattenDoubleArray(allConfidences, dataSetSize);
     }
 
     public int getDataSetSize() {
@@ -44,6 +43,14 @@ public class ROCData {
         return trueClasses;
     }
 
+    public double getConfidence(int index) {
+        return confidences[index];
+    }
+
+    public double getTrueClass(int index) {
+        return trueClasses[index];
+    }
+
     public double getAreaUnderCurve() {
         double areaUnderCurve = 0.0;
 
@@ -53,7 +60,9 @@ public class ROCData {
         for (int i = 2; i < dataSetSize; i++) {
             performanceMeasure = getPerformanceMeasureOnSubset(i);
 
-            height = (1 - performanceMeasure.calculateSpecificity()) - (1 - previousPerformanceMeasure.calculateSpecificity());
+            double falsePositiveRate = performanceMeasure.calculateFalsePositiveRate();
+            double previousFalsePositiveRate = previousPerformanceMeasure.calculateFalsePositiveRate();
+            height = falsePositiveRate - previousFalsePositiveRate;
 
             areaUnderCurve += Utils.getTrapezoidalArea(performanceMeasure.calculateRecall(), previousPerformanceMeasure.calculateRecall(), height);
 
@@ -65,11 +74,11 @@ public class ROCData {
     private PerformanceMeasure getPerformanceMeasureOnSubset(int stopIndex) {
         int numTruePositives = 0, numFalsePositives = 0, numTrueNegatives = 0, numFalseNegatives = 0;
         for (int i = 0; i < stopIndex; i++) {
-            if (trueClasses[i] > 0 && confidences[i] > 0)
+            if (trueClasses[i] > 0 && confidences[i] > 0.5)
                 numTruePositives++;
-            else if (trueClasses[i] > 0 && confidences[i] < 0)
+            else if (trueClasses[i] > 0 && confidences[i] <= 0.5)
                 numFalsePositives++;
-            else if (trueClasses[i] < 0 && confidences[i] < 0)
+            else if (trueClasses[i] < 0 && confidences[i] <= 0.5)
                 numTrueNegatives++;
             else
                 numFalseNegatives++;

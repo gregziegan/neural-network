@@ -32,4 +32,8 @@ public class PerformanceMeasure {
         return Utils.calculateSpecificity(numTrueNegatives, numFalsePositives);
     }
 
+    public double calculateFalsePositiveRate() {
+        return 1 - Utils.calculateSpecificity(numTrueNegatives, numFalsePositives);
+    }
+
 }

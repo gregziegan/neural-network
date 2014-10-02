@@ -58,7 +58,7 @@ public class Network {
         return weightDecay;
     }
 
-    public void trainUntilConvergence(DataSet trainingSet) {
+    public void trainUntilConvergence(DataSet trainingSet, boolean printProgress) {
         double averageDisparity = Double.POSITIVE_INFINITY;
         double expectedClassValue;
 
@@ -77,8 +77,9 @@ public class Network {
         }
     }
 
-    public void train(DataSet trainingSet, int numberOfTrainingIterations) {
+    public void train(DataSet trainingSet, int numberOfTrainingIterations, boolean printProgress) {
         for (int i = 0; i < numberOfTrainingIterations; i++) {
+            Utils.printProgress(i, numberOfTrainingIterations);
             for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
                 Instance instance = trainingSet.instance(instanceIndex);
                 feedForward(Utils.getInstanceValuesWithBias(instance));
