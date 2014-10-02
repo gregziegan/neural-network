@@ -19,14 +19,14 @@ public class NetworkFactory {
     public static Network createInitialNetwork(final DataSet trainingSet, final float weightDecay, final int numberOfHiddenNeurons) {
         int numberOfInputNeurons = trainingSet.numAttributes() - 2;  // first attribute is the index, last attribute is the class label
 
-        Neuron[] neurons = NeuronFactory.createInitialNeurons(numberOfInputNeurons, numberOfHiddenNeurons);
+        Neuron[] neurons = NeuronFactory.createInitialNeurons(numberOfInputNeurons, numberOfHiddenNeurons );
         double[][] initialWeights = getInitialWeights(numberOfInputNeurons, numberOfHiddenNeurons);
 
         return new Network(neurons, initialWeights, weightDecay, numberOfHiddenNeurons);
     }
 
     public static double[][] getInitialWeights(final int numberOfInputNeurons, final int numberOfHiddenNeurons) {
-        double[][] weights = new double[numberOfInputNeurons+numberOfHiddenNeurons + 2][];
+        double[][] weights = new double[numberOfInputNeurons + 1 + numberOfHiddenNeurons + 1][];
         Random random = new Random(12345);
 
         double[] initialWeightChoices = new double[]{-0.1, 0.1};

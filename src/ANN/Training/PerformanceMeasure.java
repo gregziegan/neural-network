@@ -17,11 +17,11 @@ public class PerformanceMeasure {
     }
 
     public double calculateAccuracy() {
-        return (numTruePositives + numTrueNegatives) / (numTruePositives + numTrueNegatives + numFalsePositives + numFalseNegatives);
+        return ( (double) numTruePositives + numTrueNegatives) / (numTruePositives + numTrueNegatives + numFalsePositives + numFalseNegatives);
     }
 
     public double calculatePrecision() {
-        return numTruePositives / (numTruePositives + numFalsePositives);
+        return numTruePositives / ( (double) numTruePositives + numFalsePositives);
     }
 
     public double calculateRecall() {
