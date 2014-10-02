@@ -36,11 +36,11 @@ public class Trainer implements Runnable {
             Instance instance = validationSet.instance(i);
             double classLabelPrediction = network.classify(instance);
             double classLabel = instance.classValue();
-            if (classLabel > 0 && classLabelPrediction > 0)
+            if (classLabel > 0.5 && classLabelPrediction > 0.5)
                 numTruePositives++;
-            else if (classLabel > 0 && classLabelPrediction < 0)
+            else if (classLabel > 0.5 && classLabelPrediction <= 0.5)
                 numFalsePositives++;
-            else if (classLabel < 0 && classLabelPrediction < 0)
+            else if (classLabel < 0.5 && classLabelPrediction <= 0.5)
                 numTrueNegatives++;
             else
                 numFalseNegatives++;

@@ -185,9 +185,6 @@ public class Network {
 
     public double classify(Instance instance) {
         double[] inputLayerValues = Utils.getInstanceValuesWithBias(instance);
-        double certainty = feedForward(inputLayerValues);
-        if (certainty >= 0.5)
-            return 1.0;
-        return 0.0;
+        return feedForward(inputLayerValues);
     }
 }
