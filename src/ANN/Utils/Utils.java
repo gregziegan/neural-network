@@ -15,10 +15,6 @@ public class Utils {
         return (output - expected);
     }
 
-    public static double evaluateSigmoidDerivative(final double exponent) {
-        return evaluateSigmoid(exponent) * (1 - evaluateSigmoid(exponent));
-    }
-
     public static double getWeightChangeValueOutputLayer(final double input, final double output, final double expected) {
         return getLoss(output, expected) * input * output * (1 - output);
     }
@@ -43,16 +39,12 @@ public class Utils {
     }
 
     public static void normalizeDataSet(DataSet dataset) {
-        double[] means = new double[dataset.numAttributes()];
-        double[] stds = new double[dataset.numAttributes()];
-        for (int attribute = 1; attribute < dataset.numAttributes() -1; attribute++) {
-            means[attribute] = dataset.mean(attribute);
-            stds[attribute] = dataset.stdDeviation(attribute);
-        }
-            for (int example = 0; example < dataset.size(); example++) {
-                Instance instance = dataset.instance(example);
-                for (int attributeValue = 1; attributeValue < instance.numAttributes() - 1; attributeValue++) {
-                    instance.setValue(attributeValue, normalizeData(instance.value(attributeValue), means[attributeValue], stds[attributeValue]));
+        for (int exampleIndex = 0; exampleIndex < dataset.size(); exampleIndex++) {
+            Instance instance = dataset.instance(exampleIndex);
+            for (int attributeIndex = 1; attributeIndex < instance.numAttributes() - 1; attributeIndex++) {
+                double mean = dataset.mean(attributeIndex);
+                double stdDeviation = dataset.stdDeviation(attributeIndex);
+                instance.setValue(attributeIndex, normalizeData(instance.value(attributeIndex), mean, stdDeviation));
             }
         }
     }
@@ -104,15 +96,11 @@ public class Utils {
     }
 
     public static double calculateSpecificity(int numTrueNegatives, int numFalsePositives) {
-        if (numTrueNegatives + numFalsePositives == 0)
-            return 0;
-        return numTrueNegatives / (numTrueNegatives + numFalsePositives);
+        return numTrueNegatives / ((double) numTrueNegatives + numFalsePositives);
     }
 
     public static double calculateRecall(int numTruePositives, int numFalseNegatives) {
-        if (numTruePositives + numFalseNegatives == 0)
-            return 0;
-        return numTruePositives / (numTruePositives + numFalseNegatives);
+        return numTruePositives / ( (double) numTruePositives + numFalseNegatives);
     }
 
     public static double getTrapezoidalArea(double a, double b, double h) {

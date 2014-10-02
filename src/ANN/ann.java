@@ -2,6 +2,7 @@ package ANN;
 
 import ANN.Training.*;
 import ANN.Utils.NetworkFactory;
+import ANN.Utils.Utils;
 import Parsing.data.DataFileProcessor;
 import Parsing.data.DataSet;
 
@@ -30,6 +31,8 @@ public class ann {
         System.out.println("Reading in data...");
         DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
+
+        Utils.normalizeDataSet(dataSet);
 
         System.out.println("Creating Artificial Neural Networks...");
         Network[] networks = NetworkFactory.getSeveralNetworkCopies(NUM_INDEPENDENT_TESTS, dataSet, weightDecay, numberOfHiddenNeurons);

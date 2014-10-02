@@ -10,7 +10,12 @@ public class Bias extends Neuron {
 
     }
 
-    public int getActivationThreshold() {
+    @Override
+    public void updateOutput(double[] weights, double[] inputValues) {
+    }
+
+    @Override
+    public double getOutputValue() {
         return activationThreshold;
     }
 
