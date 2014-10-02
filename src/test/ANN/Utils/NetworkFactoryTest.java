@@ -54,8 +54,8 @@ public class NetworkFactoryTest {
 
     @Test
     public void testGetInitialWeights() throws Exception {
-        int numInputNeurons = 10, numHiddenNeurons = 5;
-        int expectedWeightArraySize = numInputNeurons + numHiddenNeurons;
+        int numInputNeurons = 10, numHiddenNeurons = 5, numBiases = 2;
+        int expectedWeightArraySize = numInputNeurons + numHiddenNeurons + numBiases + 1;
         double[][] weights = NetworkFactory.getInitialWeights(numInputNeurons, numHiddenNeurons);
         assertEquals(expectedWeightArraySize, weights.length);
         for (int i = 0; i < weights.length; i++) {

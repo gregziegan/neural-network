@@ -35,13 +35,12 @@ public class ann {
         Network[] networks = NetworkFactory.getSeveralNetworkCopies(NUM_INDEPENDENT_TESTS, dataSet, weightDecay, numberOfHiddenNeurons);
 
         System.out.println("Generating five-fold stratified training and validation sets...");
-        TrainingFactory trainingFactory = new TrainingFactory();
-        trainingFactory.populateTrainingAndValidationSets(dataSet, NUM_INDEPENDENT_TESTS);
+        CrossValidation crossValidation = TrainingFactory.produceTrainingAndValidationSets(dataSet, NUM_INDEPENDENT_TESTS);
 
         System.out.println("Training network with supplied data...\n\n");
         OverallPerformance performance;
         try {
-            performance = performStratifiedCrossValidation(networks, trainingFactory, numberOfTrainingIterations);
+            performance = performStratifiedCrossValidation(networks, crossValidation, numberOfTrainingIterations);
             printPerformanceBreakdown(performance);
         } catch (InterruptedException e) {
             System.out.println("Training stopped early!");
@@ -52,11 +51,11 @@ public class ann {
         }
     }
 
-    public static OverallPerformance performStratifiedCrossValidation(Network[] networks, TrainingFactory trainingFactory, int numberOfTrainingIterations) throws InterruptedException, TimeoutException {
+    public static OverallPerformance performStratifiedCrossValidation(Network[] networks, CrossValidation crossValidation, int numberOfTrainingIterations) throws InterruptedException, TimeoutException {
         List<PerformanceMeasure> performanceMeasuresList = Collections.synchronizedList(new ArrayList<PerformanceMeasure>(NUM_INDEPENDENT_TESTS));
         List<ROCData> rocDataList = Collections.synchronizedList(new ArrayList<ROCData>(NUM_INDEPENDENT_TESTS));
-        DataSet[] trainingSets = trainingFactory.getCurrentTrainingSets();
-        DataSet[] validationSets = trainingFactory.getCurrentValidationSets();
+        DataSet[] trainingSets = crossValidation.getTrainingSets();
+        DataSet[] validationSets = crossValidation.getValidationSets();
 
         ExecutorService es = Executors.newCachedThreadPool();
         for (int i = 0; i < NUM_INDEPENDENT_TESTS; i++) {

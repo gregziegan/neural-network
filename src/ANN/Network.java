@@ -36,7 +36,7 @@ public class Network {
     }
 
     public Neuron[] getInputNeurons() {
-        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons + 1, Neuron[].class);
+        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
     }
 
     public Neuron[] getHiddenNeurons() {

@@ -6,24 +6,8 @@ import Parsing.data.Instance;
 
 public class TrainingFactory {
 
-    private DataSet[] currentTrainingSets;
-    private DataSet[] currentValidationSets;
-
-    public TrainingFactory() {
-
-    }
-
-    public void populateTrainingAndValidationSets(final DataSet dataSet, final int numberOfFolds) {
-        this.currentTrainingSets = getTrainingSets(getRandomizedStratifiedFolds(dataSet, numberOfFolds));
-        this.currentValidationSets = TrainingFactory.getValidationSets(currentTrainingSets);
-    }
-
-    public DataSet[] getCurrentValidationSets() {
-        return currentValidationSets;
-    }
-
-    public DataSet[] getCurrentTrainingSets() {
-        return currentTrainingSets;
+    public static CrossValidation produceTrainingAndValidationSets(DataSet dataSet, int numberOfFolds) {
+        return getCrossValidation(getRandomizedStratifiedFolds(dataSet, numberOfFolds));
     }
 
     public static int getMeanSplitIndex(DataSet dataSet) {
@@ -76,15 +60,6 @@ public class TrainingFactory {
         return subset;
     }
 
-    public static DataSet[] getValidationSets(DataSet[] trainingSets) {
-        DataSet[] testSets = new DataSet[trainingSets.length];
-        for (int i = 0, j = trainingSets.length - 1; i < trainingSets.length; i++, j--) {
-            testSets[i] = new DataSet(trainingSets[j]);
-            testSets[i].add(trainingSets[j]);
-        }
-        return testSets;
-    }
-
     public static DataSet combineDataSets(DataSet[] dataSets) {
         DataSet superSet = new DataSet(dataSets[0]);
         for (DataSet subset : dataSets) {
@@ -94,16 +69,20 @@ public class TrainingFactory {
         return superSet;
     }
 
-    public static DataSet[] getTrainingSets(DataSet[] folds) {
+    public static CrossValidation getCrossValidation(DataSet[] folds) {
         int numOfTrainingSetFolds = folds.length - 1;
         DataSet[][] foldCombinations = new DataSet[folds.length][numOfTrainingSetFolds];
+        DataSet[] validationSets = new DataSet[folds.length];
 
         for (int foldIndex = 0; foldIndex < folds.length; foldIndex++) {
             DataSet[] trainingSet = new DataSet[numOfTrainingSetFolds];
-            for (int j = numOfTrainingSetFolds, trainingIndex = 0; trainingIndex < numOfTrainingSetFolds; j--, trainingIndex++) {
+            int j = numOfTrainingSetFolds;
+            for (int trainingIndex = 0; trainingIndex < numOfTrainingSetFolds; trainingIndex++) {
                 int foldIndexToInclude = (j + foldIndex) % folds.length;
                 trainingSet[trainingIndex] = folds[foldIndexToInclude];
+                j--;
             }
+            validationSets[foldIndex] = folds[(j + foldIndex + 1) % folds.length];  // add excluded fold to validation sets array
             foldCombinations[foldIndex] = trainingSet;
         }
 
@@ -113,6 +92,6 @@ public class TrainingFactory {
             trainingSets[i] = combineDataSets(foldCombinations[i]);
         }
 
-        return trainingSets;
+        return new CrossValidation(trainingSets, validationSets);
     }
 }

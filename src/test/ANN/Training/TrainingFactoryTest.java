@@ -22,15 +22,6 @@ public void after() throws Exception {
 } 
 
 @Test
-public void testPopulateTrainingAndValidationSets() throws Exception {
-    DataSet dataSet = TestUtils.getTestDataSet();
-    TrainingFactory trainingFactory = new TrainingFactory();
-    trainingFactory.populateTrainingAndValidationSets(dataSet, NUM_INDEPENDENT_TESTS);
-    assertEquals(NUM_INDEPENDENT_TESTS, trainingFactory.getCurrentTrainingSets().length);
-    assertEquals(NUM_INDEPENDENT_TESTS, trainingFactory.getCurrentValidationSets().length);
-}
-
-@Test
 public void testGetMeanSplitIndex() throws Exception {
     DataSet sortedDataSet = TestUtils.getTestDataSet();
     sortedDataSet.sort(sortedDataSet.classIndex());
@@ -67,21 +58,6 @@ public void testGetSubsetOfDataSet() throws Exception {
     DataSet dataSet = TestUtils.getTestDataSet();
     DataSet subset = TrainingFactory.getSubsetOfDataSet(dataSet, 0, NUM_INDEPENDENT_TESTS);
     assertEquals(NUM_INDEPENDENT_TESTS, subset.size());
-}
-
-@Test
-public void testGetTrainingSets() throws Exception {
-    DataSet dataSet = TestUtils.getTestDataSet();
-    DataSet[] trainingSets = TrainingFactory.getTrainingSets(TrainingFactory.getRandomizedStratifiedFolds(dataSet, NUM_INDEPENDENT_TESTS));
-    assertEquals(NUM_INDEPENDENT_TESTS, trainingSets.length);
-}
-
-@Test
-public void testGetValidationSets() throws Exception {
-    DataSet dataSet = TestUtils.getTestDataSet();
-    DataSet[] trainingSets = TrainingFactory.getTrainingSets(TrainingFactory.getRandomizedStratifiedFolds(dataSet, NUM_INDEPENDENT_TESTS));
-    DataSet[] validationSets = TrainingFactory.getValidationSets(trainingSets);
-    assertEquals(trainingSets.length, validationSets.length);
 }
 
 }

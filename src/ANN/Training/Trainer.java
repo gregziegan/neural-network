@@ -40,7 +40,7 @@ public class Trainer implements Runnable {
                 numTruePositives++;
             else if (classLabel > 0 && classLabelPrediction < 0)
                 numFalsePositives++;
-            else if (classLabelPrediction < 0 && classLabelPrediction < 0)
+            else if (classLabel < 0 && classLabelPrediction < 0)
                 numTrueNegatives++;
             else
                 numFalseNegatives++;
