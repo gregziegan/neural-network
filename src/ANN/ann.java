@@ -32,6 +32,7 @@ public class ann {
         DataSet metaInfo = DataFileProcessor.readInMetaInfo(filename);
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
+        System.out.println("Normalizing data set...");
         Utils.normalizeDataSet(dataSet);
 
         System.out.println("Creating Artificial Neural Networks...");

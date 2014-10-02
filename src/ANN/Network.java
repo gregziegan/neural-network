@@ -62,16 +62,10 @@ public class Network {
         double averageDisparity = Double.POSITIVE_INFINITY;
         double expectedClassValue;
 
-        int i = 0;
         double previousWeightSum = Double.POSITIVE_INFINITY;
         double currentWeightSum;
         while (averageDisparity >= 0.00001) {
-            if (i % 1000 == 0) {
-                System.out.println(String.format("iteration: %d, average disparity: %f", i, averageDisparity));
-            }
             currentWeightSum = getSumOfWeights();
-            System.out.println(currentWeightSum);
-            System.out.println(previousWeightSum);
             for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
                 Instance instance = trainingSet.instance(instanceIndex);
                 expectedClassValue = instance.classValue();
@@ -79,8 +73,6 @@ public class Network {
                 backPropagate(expectedClassValue);
             }
             averageDisparity = Math.abs(previousWeightSum - currentWeightSum);
-            System.out.println(averageDisparity);
-            i++;
             previousWeightSum = currentWeightSum;
         }
     }
@@ -126,7 +118,7 @@ public class Network {
         for (int neuronFromIndex = 0; neuronFromIndex < weightChanges.length; neuronFromIndex++) {
             for (int neuronToIndex = 0; neuronToIndex < weightChanges[neuronFromIndex].length; neuronToIndex++) {
                 double currentWeight = this.weights[neuronFromIndex][neuronToIndex];
-                this.weights[neuronFromIndex][neuronToIndex] -= (LEARNING_RATE * weightChanges[neuronFromIndex][neuronToIndex] + currentWeight * weightDecay);
+                this.weights[neuronFromIndex][neuronToIndex] -= LEARNING_RATE * weightChanges[neuronFromIndex][neuronToIndex] + (currentWeight * 2 * weightDecay);
             }
         }
 
