@@ -103,10 +103,14 @@ public class Utils {
     }
 
     public static double calculateSpecificity(int numTrueNegatives, int numFalsePositives) {
+        if ((numTrueNegatives + numFalsePositives) == 0)
+            return 1;
         return numTrueNegatives / ((double) numTrueNegatives + numFalsePositives);
     }
 
     public static double calculateRecall(int numTruePositives, int numFalseNegatives) {
+        if ((numTruePositives + numFalseNegatives) == 0)
+            return 0;
         return numTruePositives / ( (double) numTruePositives + numFalseNegatives);
     }
 
@@ -114,14 +118,17 @@ public class Utils {
         return ((a + b) / 2) * h;
     }
 
-    public static double[] flattenDoubleArray(double[][] mdarray, int mdArrayFullSize) {
-        double[] flattenedArray = new double[mdArrayFullSize];
-        for (int i = 0; i < mdarray.length; i++) {
-            for (int j = 0; j < mdarray[i].length; j++) {
-                flattenedArray[i] = mdarray[i][j];
-            }
+    public static void printProgress(int curIndex, int lastIndex) {
+        float percentage = curIndex / (float) lastIndex;
+        StringBuilder sb = new StringBuilder("\r[");
+        for (int i = 0; i < (int) ((percentage * 100) / 5); i++) {
+            sb.append('#');
         }
-        return flattenedArray;
+        for (int i = sb.length(); i < 22; i++) {
+            sb.append(' ');
+        }
+        sb.append(String.format("] %,.2f%%", percentage * 100));
+        System.out.print(sb.toString());
     }
 
 }

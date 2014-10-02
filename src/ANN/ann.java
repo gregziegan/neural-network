@@ -63,7 +63,7 @@ public class ann {
 
         ExecutorService es = Executors.newCachedThreadPool();
         for (int i = 0; i < NUM_INDEPENDENT_TESTS; i++) {
-            es.execute(new Trainer(performanceMeasuresList, rocDataList, networks[i], trainingSets[i], validationSets[i], numberOfTrainingIterations));
+            es.execute(new Trainer(i, performanceMeasuresList, rocDataList, networks[i], trainingSets[i], validationSets[i], numberOfTrainingIterations));
         }
         es.shutdown();
         boolean finished = es.awaitTermination(60, TimeUnit.MINUTES);

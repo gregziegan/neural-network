@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Trainer implements Runnable {
 
+    private int threadId;
     private Network network;
     private DataSet trainingSet, validationSet;
     private int numberOfTrainingIterations;
@@ -18,9 +19,10 @@ public class Trainer implements Runnable {
     private double[] trueClasses;
     private double[] confidences;
 
-    public Trainer(List<PerformanceMeasure> performanceMeasures, List<ROCData> rocDataList, Network network, DataSet trainingSet, DataSet validationSet, int numberOfTrainingIterations) {
+    public Trainer(int threadId, List<PerformanceMeasure> performanceMeasures, List<ROCData> rocDataList, Network network, DataSet trainingSet, DataSet validationSet, int numberOfTrainingIterations) {
         this.performanceMeasures = performanceMeasures;
         this.rocDataList = rocDataList;
+        this.threadId = threadId;
         this.network = network;
         this.trainingSet = trainingSet;
         this.validationSet = validationSet;
@@ -51,18 +53,19 @@ public class Trainer implements Runnable {
         this.performanceMeasure = new PerformanceMeasure(numTruePositives, numFalsePositives, numTrueNegatives, numFalseNegatives);
     }
 
-    public void trainNetwork() {
-        for (int i = 0; i < trainingSet.size(); i++) {
-            if (numberOfTrainingIterations <= 0)
-                network.trainUntilConvergence(trainingSet);
-            else
-                network.train(trainingSet, numberOfTrainingIterations);
-        }
-
+    public void trainNetwork(boolean printProgress) {
+        if (numberOfTrainingIterations <= 0)
+            network.trainUntilConvergence(trainingSet, printProgress);
+        else
+            network.train(trainingSet, numberOfTrainingIterations, printProgress);
     }
 
     public void run() {
-        trainNetwork();
+        boolean printProgress = false;
+        if (threadId == 0)
+            printProgress = true;
+
+        trainNetwork(printProgress);
         calculatePerformanceMeasure();
         performanceMeasures.add(performanceMeasure);
         rocDataList.add(new ROCData(trueClasses, confidences));
