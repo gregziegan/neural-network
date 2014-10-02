@@ -39,12 +39,19 @@ public class Utils {
     }
 
     public static void normalizeDataSet(DataSet dataset) {
+
+        double[] means = new double[dataset.numAttributes() -2];
+        double[] stds = new double[dataset.numAttributes() - 2];
+
+        for (int i = 1; i < dataset.numAttributes() -1; i++) {
+            means[i - 1] = dataset.mean(i);
+            stds[i-1] = dataset.stdDeviation(i);
+        }
+
         for (int exampleIndex = 0; exampleIndex < dataset.size(); exampleIndex++) {
             Instance instance = dataset.instance(exampleIndex);
             for (int attributeIndex = 1; attributeIndex < instance.numAttributes() - 1; attributeIndex++) {
-                double mean = dataset.mean(attributeIndex);
-                double stdDeviation = dataset.stdDeviation(attributeIndex);
-                instance.setValue(attributeIndex, normalizeData(instance.value(attributeIndex), mean, stdDeviation));
+                instance.setValue(attributeIndex, normalizeData(instance.value(attributeIndex), means[attributeIndex -1], stds[attributeIndex -1]));
             }
         }
     }
