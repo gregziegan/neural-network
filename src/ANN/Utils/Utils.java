@@ -3,9 +3,6 @@ package ANN.Utils;
 import Parsing.data.DataSet;
 import Parsing.data.Instance;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class Utils {
@@ -107,10 +104,14 @@ public class Utils {
     }
 
     public static double calculateSpecificity(int numTrueNegatives, int numFalsePositives) {
+        if (numTrueNegatives + numFalsePositives == 0)
+            return 0;
         return numTrueNegatives / (numTrueNegatives + numFalsePositives);
     }
 
     public static double calculateRecall(int numTruePositives, int numFalseNegatives) {
+        if (numTruePositives + numFalseNegatives == 0)
+            return 0;
         return numTruePositives / (numTruePositives + numFalseNegatives);
     }
 

@@ -42,8 +42,7 @@ public class Network {
     }
 
     public Neuron[] getInputNeurons() {
-        int numberOfInputNeurons = neurons.length - numberOfHiddenNeurons - 1 - 2;
-        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons, Neuron[].class);
+        return Arrays.copyOfRange(this.neurons, 0, numberOfInputNeurons + 1, Neuron[].class);
     }
 
     public Neuron[] getHiddenNeurons() {
@@ -122,7 +121,8 @@ public class Network {
 
     public double[] getNeuronInputWeights(int neuronIndex) {
         Layer neuronLayer = neurons[neuronIndex].getLayer();
-        assert neuronLayer != Layer.INPUT;
+        if (neuronLayer == Layer.INPUT)
+            throw new IllegalStateException("Only HIDDEN & OUTPUT Layer Neurons have input weights");
 
         double[] inputWeights;
 

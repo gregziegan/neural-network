@@ -6,36 +6,36 @@ import Parsing.data.Instance;
 
 public class TrainingFactory {
 
-    private DataSet dataSet;
-    private int numberOfFolds;
-    private DataSet[] trainingSets;
-    private DataSet[] validationSets;
+    private DataSet[] currentTrainingSets;
+    private DataSet[] currentValidationSets;
 
-    public TrainingFactory(DataSet dataSet, int numberOfFolds) {
-        this.dataSet = dataSet;
-        this.numberOfFolds = numberOfFolds;
-        this.trainingSets = getValidationSets(getRandomizedStratifiedFolds());
-        this.validationSets = getTestSets();
+    public TrainingFactory() {
+
     }
 
-    public DataSet[] getValidationSets() {
-        return validationSets;
+    public void populateTrainingAndValidationSets(final DataSet dataSet, final int numberOfFolds) {
+        this.currentTrainingSets = getTrainingSets(getRandomizedStratifiedFolds(dataSet, numberOfFolds));
+        this.currentValidationSets = TrainingFactory.getValidationSets(currentTrainingSets);
     }
 
-    public DataSet[] getTrainingSets() {
-        return trainingSets;
+    public DataSet[] getCurrentValidationSets() {
+        return currentValidationSets;
     }
 
-    private int getMeanSplitIndex() {
-        return (int) Math.ceil(dataSet.mean(dataSet.classIndex()) * dataSet.size());
+    public DataSet[] getCurrentTrainingSets() {
+        return currentTrainingSets;
     }
 
-    private DataSet[] getRandomizedStratifiedFolds() {
+    public static int getMeanSplitIndex(DataSet dataSet) {
+        return (int) Math.ceil((1 - dataSet.mean(dataSet.classIndex())) * dataSet.size());
+    }
+
+    public static DataSet[] getRandomizedStratifiedFolds(DataSet dataSet, int numberOfFolds) {
         dataSet.sort(dataSet.classIndex());
-        DataSet classADataSet = getSubsetOfDataSet(dataSet, 0, getMeanSplitIndex());
-        DataSet classBDataSet = getSubsetOfDataSet(dataSet, getMeanSplitIndex(), dataSet.size());
-        DataSet[] classAFolds = getFolds(classADataSet);
-        DataSet[] classBFolds = getFolds(classBDataSet);
+        DataSet classADataSet = getSubsetOfDataSet(dataSet, 0, getMeanSplitIndex(dataSet));
+        DataSet classBDataSet = getSubsetOfDataSet(dataSet, getMeanSplitIndex(dataSet), dataSet.size());
+        DataSet[] classAFolds = getFolds(classADataSet, numberOfFolds);
+        DataSet[] classBFolds = getFolds(classBDataSet, numberOfFolds);
 
         DataSet[] stratifiedFolds = new DataSet[numberOfFolds];
         DataSet[] dataSetsToCombine;
@@ -49,16 +49,16 @@ public class TrainingFactory {
         return stratifiedFolds;
     }
 
-    private DataSet[] getFolds(DataSet homogeneousDataSet) {
+    public static DataSet[] getFolds(DataSet dataSet, int numberOfFolds) {
         DataSet[] folds = new DataSet[numberOfFolds];
 
-        int sizeOfSubset = homogeneousDataSet.size() / numberOfFolds;
+        int sizeOfSubset = dataSet.size() / numberOfFolds;
         int startIndex = 0, stopIndex = sizeOfSubset;
         for (int i = 0; i < numberOfFolds; i++) {
-            folds[i] = getSubsetOfDataSet(homogeneousDataSet, startIndex, stopIndex);
+            folds[i] = getSubsetOfDataSet(dataSet, startIndex, stopIndex);
             startIndex += sizeOfSubset;
             if (i == numberOfFolds - 1)
-                stopIndex = homogeneousDataSet.size() - 1;
+                stopIndex = dataSet.size() - 1;
             else
                 stopIndex += sizeOfSubset;
         }
@@ -66,7 +66,7 @@ public class TrainingFactory {
         return folds;
     }
 
-    private DataSet getSubsetOfDataSet(final DataSet dataSet, int startIndex, int stopIndex) {
+    public static DataSet getSubsetOfDataSet(final DataSet dataSet, int startIndex, int stopIndex) {
         DataSet subset = new DataSet(dataSet);
         Instance[] instances = new Instance[stopIndex - startIndex];
         for (int j = startIndex; j < stopIndex; j++) {
@@ -76,7 +76,7 @@ public class TrainingFactory {
         return subset;
     }
 
-    private DataSet[] getTestSets() {
+    public static DataSet[] getValidationSets(DataSet[] trainingSets) {
         DataSet[] testSets = new DataSet[trainingSets.length];
         for (int i = 0, j = trainingSets.length - 1; i < trainingSets.length; i++, j--) {
             testSets[i] = new DataSet(trainingSets[j]);
@@ -85,7 +85,7 @@ public class TrainingFactory {
         return testSets;
     }
 
-    private DataSet combineDataSets(DataSet[] dataSets) {
+    public static DataSet combineDataSets(DataSet[] dataSets) {
         DataSet superSet = new DataSet(dataSets[0]);
         for (DataSet subset : dataSets) {
             superSet.add(subset);
@@ -94,19 +94,17 @@ public class TrainingFactory {
         return superSet;
     }
 
-    private DataSet[] getValidationSets(DataSet[] folds) {
-        int sizeOfTrainingSet = folds.length - 1;
-        DataSet[][] foldCombinations = new DataSet[folds.length][sizeOfTrainingSet];
+    public static DataSet[] getTrainingSets(DataSet[] folds) {
+        int numOfTrainingSetFolds = folds.length - 1;
+        DataSet[][] foldCombinations = new DataSet[folds.length][numOfTrainingSetFolds];
 
-        for (int i = 0; i < folds.length; i++) {
-            DataSet[] trainingSet = new DataSet[sizeOfTrainingSet];
-            for (int j = 0; j < sizeOfTrainingSet; j++) {
-                int foldIndexToInclude = sizeOfTrainingSet - 1 - i - j;
-                if (foldIndexToInclude < 0)
-                    foldIndexToInclude = sizeOfTrainingSet - foldIndexToInclude;
-                trainingSet[j] = folds[foldIndexToInclude];
+        for (int foldIndex = 0; foldIndex < folds.length; foldIndex++) {
+            DataSet[] trainingSet = new DataSet[numOfTrainingSetFolds];
+            for (int j = numOfTrainingSetFolds, trainingIndex = 0; trainingIndex < numOfTrainingSetFolds; j--, trainingIndex++) {
+                int foldIndexToInclude = (j + foldIndex) % folds.length;
+                trainingSet[trainingIndex] = folds[foldIndexToInclude];
             }
-            foldCombinations[i] = trainingSet;
+            foldCombinations[foldIndex] = trainingSet;
         }
 
         DataSet[] trainingSets = new DataSet[folds.length];
@@ -117,7 +115,4 @@ public class TrainingFactory {
 
         return trainingSets;
     }
-
-
-
 }

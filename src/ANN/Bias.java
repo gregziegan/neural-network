@@ -16,6 +16,6 @@ public class Bias extends Neuron {
 
     @Override
     public String toString() {
-        return String.format("<Bias: layer: %s id: %d", super.id, getLayer());
+        return String.format("<Bias: id: %d, layer: %s>", super.id, getLayer());
     }
 }
