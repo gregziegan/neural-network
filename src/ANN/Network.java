@@ -96,8 +96,13 @@ public class Network {
     }
 
     public void backPropagate(double classLabel) {
-        double[][] weightChanges = weights.clone();
+        double[][] weightChanges = new double [weights.length][];
+
+        for (int i = 0; i < weights.length; i++) {
+            weightChanges[i] = Arrays.copyOf(weights[i], weights[i].length);
+        }
         Neuron outputNeuron = getOutputNeuron();
+
 
         // Back propagate From output layer
         for (int neuron = numberOfInputNeuronsIncludingBias; neuron < neurons.length - 1; neuron++) {
