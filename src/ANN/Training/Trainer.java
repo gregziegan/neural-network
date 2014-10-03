@@ -41,11 +41,11 @@ public class Trainer implements Runnable {
             if (classLabel > 0.5 && classLabelPrediction > 0.5)
                 numTruePositives++;
             else if (classLabel > 0.5 && classLabelPrediction <= 0.5)
-                numFalsePositives++;
+                numFalseNegatives++;
             else if (classLabel < 0.5 && classLabelPrediction <= 0.5)
                 numTrueNegatives++;
             else
-                numFalseNegatives++;
+                numFalsePositives++;
             trueClasses[i] = classLabel;
             confidences[i] = classLabelPrediction;
         }
