@@ -33,7 +33,8 @@ public class DataFileProcessor {
 	static {
 		CONTINUOUS.add("CONTINUOUS");
 		CONTINUOUS.add("continuous");
-	}
+        CONTINUOUS.add("continuous.");
+    }
 	
 	
 	/**
@@ -75,7 +76,7 @@ public class DataFileProcessor {
 				// this line defines an attribute
 				String attrName = stringTokenizer.nextToken();
 				String attrType = stringTokenizer.nextToken();
-				if(CONTINUOUS.contains(attrType)) { // continuous
+                if(lineString.contains("CONTINUOUS") || lineString.contains("continuous")) { // continuous
 					attributes.add(new Attribute(attrName, Attribute.CONTINUOUS));
 				} else {  // nominal
 					String[] values = new String[stringTokenizer.countTokens()+1];
