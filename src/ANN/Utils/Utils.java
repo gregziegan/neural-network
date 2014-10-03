@@ -89,7 +89,7 @@ public class Utils {
 
     public static void shuffleArray(final Object[] ar)
     {
-        Random rnd = new Random();
+        Random rnd = new Random(12345);
         for (int i = ar.length - 1; i > 0; i--)
         {
             int index = rnd.nextInt(i + 1);

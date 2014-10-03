@@ -67,11 +67,11 @@ public class ROCData {
     private PerformanceMeasure getPerformanceMeasureOnSubset(int stopIndex) {
         int numTruePositives = 0, numFalsePositives = 0, numTrueNegatives = 0, numFalseNegatives = 0;
         for (int i = 0; i < stopIndex; i++) {
-            if (trueClasses[i] > 0 && confidences[i] > 0.5)
+            if (trueClasses[i] == 1 && confidences[i] > 0.5)
                 numTruePositives++;
-            else if (trueClasses[i] > 0 && confidences[i] <= 0.5)
+            else if (trueClasses[i] == 1 && confidences[i] <= 0.5)
                 numFalseNegatives++;
-            else if (trueClasses[i] < 0 && confidences[i] <= 0.5)
+            else if (trueClasses[i] == 0 && confidences[i] <= 0.5)
                 numTrueNegatives++;
             else
                 numFalsePositives++;
