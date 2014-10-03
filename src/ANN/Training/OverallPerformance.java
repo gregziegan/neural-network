@@ -5,6 +5,7 @@ public class OverallPerformance {
     private double meanAccuracy, meanPrecision, meanRecall;
     private double stdDevAccuracy, stdDevPrecision, stdDevRecall;
     private double areaUnderROC;
+    private ROCData rocData;
 
     public OverallPerformance(PerformanceMeasure[] performanceMeasures, ROCData[] rocDatas) {
         int numPerformanceMeasures = performanceMeasures.length;
@@ -27,7 +28,7 @@ public class OverallPerformance {
             stdDevRecall = stdDevRecall + Math.pow(performanceMeasure.calculateRecall() - meanRecall, 2);
         }
 
-        ROCData rocData = new ROCData(rocDatas);
+        rocData = new ROCData(rocDatas);
         areaUnderROC = rocData.getAreaUnderCurve();
     }
 
@@ -59,4 +60,5 @@ public class OverallPerformance {
         return areaUnderROC;
     }
 
+    public ROCData getRocData() { return rocData; }
 }

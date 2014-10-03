@@ -82,5 +82,7 @@ public class ann {
         System.out.println(String.format("Precision: %f %f", performance.getMeanPrecision(), performance.getStdDevPrecision()));
         System.out.println(String.format("Recall: %f %f", performance.getMeanRecall(), performance.getStdDevRecall()));
         System.out.println(String.format("Area under ROC: %f", performance.getAreaUnderROC()));
+
+        System.out.println("DONE!");
     }
 }
