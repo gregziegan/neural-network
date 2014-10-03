@@ -33,7 +33,7 @@ public class ann {
         DataSet dataSet = DataFileProcessor.readInData(filename, metaInfo);
 
         System.out.println("Normalizing data set...");
-        Utils.normalizeDataSet(dataSet);
+        dataSet = Utils.normalizeDataSet(dataSet);
 
         System.out.println("Creating Artificial Neural Networks...");
         Network[] networks = NetworkFactory.getSeveralNetworkCopies(NUM_INDEPENDENT_TESTS, dataSet, weightDecay, numberOfHiddenNeurons);

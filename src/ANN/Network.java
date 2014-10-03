@@ -70,7 +70,8 @@ public class Network {
 
     public void train(DataSet trainingSet, int numberOfTrainingIterations, boolean printProgress) {
         for (int i = 0; i < numberOfTrainingIterations; i++) {
-            Utils.printProgress(i, numberOfTrainingIterations);
+            if (printProgress)
+                Utils.printProgress(i, numberOfTrainingIterations);
             for (int instanceIndex = 0; instanceIndex < trainingSet.size(); instanceIndex++) {
                 Instance instance = trainingSet.instance(instanceIndex);
                 feedForward(Utils.getInstanceValuesWithBias(instance));

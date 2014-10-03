@@ -38,22 +38,27 @@ public class Utils {
         return (data - mean) / std;
     }
 
-    public static void normalizeDataSet(DataSet dataset) {
+    public static DataSet normalizeDataSet(DataSet dataset) {
 
         double[] means = new double[dataset.numAttributes() -2];
         double[] stds = new double[dataset.numAttributes() - 2];
 
+        DataSet standardizedDataSet = new DataSet(dataset);
         for (int i = 1; i < dataset.numAttributes() -1; i++) {
             means[i - 1] = dataset.mean(i);
-            stds[i - 1] = dataset.stdDeviation(i);
+            double std = dataset.stdDeviation(i);
+            stds[i - 1] = std;
         }
 
         for (int exampleIndex = 0; exampleIndex < dataset.size(); exampleIndex++) {
-            Instance instance = dataset.instance(exampleIndex);
+            Instance instance = new Instance(dataset.instance(exampleIndex));
             for (int attributeIndex = 1; attributeIndex < instance.numAttributes() - 1; attributeIndex++) {
                 instance.setValue(attributeIndex, normalizeData(instance.value(attributeIndex), means[attributeIndex -1], stds[attributeIndex -1]));
             }
+            standardizedDataSet.add(instance);
         }
+
+        return standardizedDataSet;
     }
 
     public static double[] getInstanceValuesWithBias(final Instance instance) {
